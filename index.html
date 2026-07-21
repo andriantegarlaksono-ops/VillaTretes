@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Katalog Villa Tretes - Sewa Villa Mewah & Private Pool Prigen Pasuruan</title>
+  <meta name="description"
+    content="Katalog sewa villa mewah di Tretes, Prigen, Pasuruan. Fasilitas Private Pool, View Gunung Arjuno, Biliar, Karaoke, dan Garasi Luas. Booking langsung via WhatsApp.">
+  <meta name="keywords"
+    content="sewa villa tretes, katalog villa tretes, villa prigen pasuruan, villa private pool tretes, sewa villa murah tretes, villa murah prigen, villa arjuno">
+
+  <!-- Google Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- SITE HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-wrapper">
+      <a href="#home" class="brand-logo">
+        <div class="logo-icon">
+          <i class="ri-building-2-fill"></i>
+        </div>
+        <span>VILLA<strong>TRETES</strong></span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#home" class="active">Beranda</a></li>
+          <li><a href="#katalog">Katalog Villa</a></li>
+          <li><a href="#wisata">Keunggulan Tretes</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#kontak">Kontak Kami</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-cta">
+        <a href="https://wa.me/6285536581733?text=Halo%20Admin%20VillaTretes,%20saya%20ingin%20tanya%20informasi%20sewa%20villa"
+          target="_blank" rel="noopener" class="btn-header-wa">
+          <i class="ri-whatsapp-line"></i>
+          <span>Hubungi Admin</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section" id="home">
+    <div class="hero-bg"></div>
+    <div class="container hero-content">
+      <div class="hero-tagline-badge">
+        <span class="badge badge-gold">
+          <i class="ri-shield-check-fill"></i> Katalogue Resmi Villa Tretes & Prigen
+        </span>
+      </div>
+
+      <h1 class="hero-title">
+        Temukan Villa Impian Nuansa <span>Mewah & Maskulin</span> di Tretes
+      </h1>
+
+      <p class="hero-subtitle">
+        Koleksi sewa villa terbaik di kawasan sejuk pegunungan Tretes-Prigen. Dilengkapi Infinity Pool air dingin &
+        hangat, Meja Biliar, Karaoke, View Gunung Arjuno, dan Garasi Luas untuk rombongan Anda.
+      </p>
+
+      <!-- Quick Stats Bar -->
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Verified Villa</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">8+</div>
+          <div class="stat-label">Pilihan Eksklusif</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">4.9★</div>
+          <div class="stat-label">Rating Kepuasan</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Respon Cepat WA</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATALOG & FILTER SECTION -->
+  <section class="catalog-section" id="katalog">
+    <div class="container">
+
+      <!-- Filter & Search Card -->
+      <div class="search-filter-card">
+        <div class="filter-grid">
+          <!-- Search input -->
+          <div class="filter-group">
+            <label for="searchInput"><i class="ri-search-2-line"></i> Cari Nama / Lokasi Villa</label>
+            <div class="input-with-icon">
+              <i class="ri-search-line"></i>
+              <input type="text" id="searchInput" class="input-control"
+                placeholder="Ketik nama villa atau area (misal: Pecalukan, Pinus)...">
+            </div>
+          </div>
+
+          <!-- Category filter dropdown -->
+          <div class="filter-group">
+            <label for="categorySelect"><i class="ri-building-line"></i> Kategori Villa</label>
+            <select id="categorySelect" class="select-control">
+              <option value="ALL">Semua Kategori</option>
+              <option value="Luxury">Luxury Premium</option>
+              <option value="Modern">Modern Industrial</option>
+              <option value="Family">Family Friendly</option>
+              <option value="Classic">Classic Rustic</option>
+            </select>
+          </div>
+
+          <!-- Sorting selector -->
+          <div class="filter-group">
+            <label for="sortSelect"><i class="ri-arrow-up-down-line"></i> Urutkan Berdasarkan</label>
+            <select id="sortSelect" class="select-control">
+              <option value="DEFAULT">Rekomendasi Utama</option>
+              <option value="PRICE_LOW">Harga Termurah</option>
+              <option value="PRICE_HIGH">Harga Tertinggi</option>
+              <option value="RATING">Rating Tertinggi</option>
+              <option value="CAPACITY">Kapasitas Terbesar</option>
+            </select>
+          </div>
+
+          <!-- Reset Filter Button -->
+          <div class="filter-group">
+            <button id="btnResetFilter" class="btn-card-action"
+              style="height: 50px; justify-content: center; width: 100%;">
+              <i class="ri-refresh-line"></i> Reset Filter
+            </button>
+          </div>
+        </div>
+
+        <!-- Feature Checkbox Chips -->
+        <div class="feature-toggles">
+          <span
+            style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Fasilitas
+            Utama:</span>
+
+          <label class="toggle-chip">
+            <input type="checkbox" id="filterPool" value="Private Pool">
+            <i class="ri-water-flash-line" style="color: var(--accent-cyan);"></i> Private Pool
+          </label>
+
+          <label class="toggle-chip">
+            <input type="checkbox" id="filterBilliard" value="Meja Biliar">
+            <i class="ri-gamepad-line" style="color: var(--accent-gold);"></i> Meja Biliar
+          </label>
+
+          <label class="toggle-chip">
+            <input type="checkbox" id="filterKaraoke" value="Karaoke">
+            <i class="ri-mic-line" style="color: var(--accent-emerald);"></i> Karaoke
+          </label>
+
+          <label class="toggle-chip">
+            <input type="checkbox" id="filterMountainView" value="View Gunung">
+            <i class="ri-landscape-line" style="color: var(--accent-gold);"></i> View Gunung Arjuno
+          </label>
+        </div>
+      </div>
+
+      <!-- Quick Category Pills -->
+      <div class="category-tabs">
+        <button class="tab-btn active" data-category="ALL"><i class="ri-grid-fill"></i> Semua Villa</button>
+        <button class="tab-btn" data-category="Luxury"><i class="ri-vip-crown-fill"></i> Luxury Premium</button>
+        <button class="tab-btn" data-category="Modern"><i class="ri-building-4-fill"></i> Modern Industrial</button>
+        <button class="tab-btn" data-category="Family"><i class="ri-team-fill"></i> Family Group</button>
+        <button class="tab-btn" data-category="Classic"><i class="ri-home-heart-fill"></i> Classic Rustic</button>
+      </div>
+
+      <!-- Results Count Header -->
+      <div class="catalog-results-header">
+        <h2 class="results-title">Koleksi Villa Tretes (<span id="resultsCount">0</span>)</h2>
+        <span class="badge badge-gold" id="activeFilterBadge">Menampilkan Semua</span>
+      </div>
+
+      <!-- VILLA GRID CONTAINER -->
+      <div class="villa-grid" id="villaGrid">
+        <!-- Dynamic Cards Injected via script.js -->
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <i class="ri-search-eye-line"></i>
+        <h3>Villa Tidak Ditemukan</h3>
+        <p style="color: var(--text-secondary); max-width: 450px; margin: 0.5rem auto 1.5rem auto;">
+          Tidak ada villa yang cocok dengan filter atau kata kunci pencarian Anda. Coba kurangi filter atau reset
+          pencarian.
+        </p>
+        <button class="btn-header-wa" onclick="resetFilters()">
+          <i class="ri-refresh-line"></i> Reset Semua Filter
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DESTINATION & FEATURE HIGHLIGHTS -->
+  <section class="destination-section" id="wisata">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Kenapa Pilih Liburan Di Tretes Prigen</span>
+        <h2 class="section-title">Destinasi Villa Favorit dengan Udara Sejuk Pegunungan</h2>
+      </div>
+
+      <div class="destination-grid">
+        <div class="dest-card">
+          <div class="dest-icon"><i class="ri-temp-cold-line"></i></div>
+          <h3 class="dest-title">Udara Pegunungan Sejuk</h3>
+          <p class="dest-desc">Terletak di lereng Gunung Arjuno-Welirang dengan ketinggian 800m dpl, menyajikan hawa
+            sejuk alami tanpa hawa panas perkotaan.</p>
+        </div>
+
+        <div class="dest-card">
+          <div class="dest-icon"><i class="ri-car-fill"></i></div>
+          <h3 class="dest-title">Akses Mudah & Dekat Tol</h3>
+          <p class="dest-desc">Hanya 1 jam perjalanan dari Surabaya/Sidoarjo dan 45 menit dari Kota Malang via jalan tol
+            Pandaan-Prigen.</p>
+        </div>
+
+        <div class="dest-card">
+          <div class="dest-icon"><i class="ri-water-flash-fill"></i></div>
+          <h3 class="dest-title">Fasilitas Private Pool</h3>
+          <p class="dest-desc">Hampir seluruh pilihan villa di katalog dilengkapi kolam renang pribadi (termasuk opsi
+            heated pool air hangat) khusus untuk rombongan Anda.</p>
+        </div>
+
+        <div class="dest-card">
+          <div class="dest-icon"><i class="ri-goblet-line"></i></div>
+          <h3 class="dest-title">Arena Entertainment</h3>
+          <p class="dest-desc">Dilengkapi fasilitas biliar slate-top 9ft, sound system karaoke berkualitas tinggi, smart
+            TV, dan spot BBQ outdoor.</p>
+        </div>
+
+        <div class="dest-card">
+          <div class="dest-icon"><i class="ri-map-pin-2-fill"></i></div>
+          <h3 class="dest-title">Dekat Wisata Hits</h3>
+          <p class="dest-desc">Akses cepat menuju Air Terjun Kakek Bodo, Putuk Truno, Cimory Dairyland Prigen, dan Taman
+            Safari Indonesia 2 II Prigen.</p>
+        </div>
+
+        <div class="dest-card">
+          <div class="dest-icon"><i class="ri-shield-star-fill"></i></div>
+          <h3 class="dest-title">Garansi Unit Real & Terpercaya</h3>
+          <p class="dest-desc">Foto unit 100% asli, pelayanan ramah penjaga villa (caretaker), dan kepastian jadwal
+            tanpa biaya tersembunyi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Pertanyaan Umum</span>
+        <h2 class="section-title">Informasi & Syarat Sewa Villa</h2>
+      </div>
+
+      <div class="faq-wrapper">
+        <div class="faq-item active">
+          <div class="faq-header">
+            <span>1. Bagaimana cara melakukan booking villa di Katalog Villa Tretes?</span>
+            <i class="ri-arrow-down-s-line"></i>
+          </div>
+          <div class="faq-body">
+            Pilih villa yang sesuai di katalog, klik tombol "Detail & Sewa", lalu pilih tanggal dan jumlah malam di
+            kalkulator estimasi. Setelah itu klik "Booking via WhatsApp" untuk terhubung langsung dengan tim Admin resmi
+            kami guna pengecekan ketersediaan tanggal dan konfirmasi DP.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-header">
+            <span>2. Berapa ketentuan jam Check-in dan Check-out villa?</span>
+            <i class="ri-arrow-down-s-line"></i>
+          </div>
+          <div class="faq-body">
+            Standar jam Check-in adalah pukul 14:00 WIB dan jam Check-out pukul 12:00 WIB di hari berikutnya. Jika Anda
+            membutuhkan Early Check-in atau Late Check-out, mohon mengonfirmasikannya kepada admin terlebih dahulu.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-header">
+            <span>3. Apakah villa bisa digunakan untuk event gathering kantor atau komunitas motor?</span>
+            <i class="ri-arrow-down-s-line"></i>
+          </div>
+          <div class="faq-body">
+            Sangat bisa! Sebagian besar villa kami seperti Villa Black Diamond, Villa Grand Arjuno, dan Villa Crown
+            Summit memiliki kapasitas 25-30 orang dengan garasi luas hingga 8 mobil dan halaman terbuka untuk acara
+            keakraban.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-header">
+            <span>4. Apakah harga rental weekday berbeda dengan weekend?</span>
+            <i class="ri-arrow-down-s-line"></i>
+          </div>
+          <div class="faq-body">
+            Ya, tarif hari kerja (Senin - Kamis) lebih terjangkau dibandingkan akhir pekan (Jumat - Minggu / Hari Libur
+            Nasional). Anda dapat memilih tipe hari pada fitur kalkulator villa untuk melihat estimasi total biaya
+            secara transparan.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="kontak">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#home" class="brand-logo" style="margin-bottom: 1rem;">
+            <div class="logo-icon"><i class="ri-building-2-fill"></i></div>
+            <span>VILLA<strong>TRETES</strong></span>
+          </a>
+          <p>Layanan katalog dan reservasi villa premium terlengkap di kawasan sejuk Tretes - Prigen Pasuruan.
+            Menghadirkan kenyamanan, privasi, dan pengalaman menginap berkelas.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigasi Cepat</h4>
+          <ul class="footer-links">
+            <li><a href="#home">Beranda</a></li>
+            <li><a href="#katalog">Katalog Villa</a></li>
+            <li><a href="#wisata">Wisata Tretes</a></li>
+            <li><a href="#faq">Pertanyaan FAQ</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Kategori Villa</h4>
+          <ul class="footer-links">
+            <li><a href="#katalog" onclick="filterByCategory('Luxury')">Luxury Premium</a></li>
+            <li><a href="#katalog" onclick="filterByCategory('Modern')">Modern Industrial</a></li>
+            <li><a href="#katalog" onclick="filterByCategory('Family')">Family Friendly</a></li>
+            <li><a href="#katalog" onclick="filterByCategory('Classic')">Classic Rustic</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Hubungi Layanan</h4>
+          <div class="footer-contact-item">
+            <i class="ri-map-pin-fill"></i>
+            <span>Kawasan Wisata Tretes, Kec. Prigen, Kabupaten Pasuruan, Jawa Timur</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="ri-whatsapp-fill"></i>
+            <span>WhatsApp Admin: +62 812-3456-7890</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="ri-time-fill"></i>
+            <span>Jam Operasional: 07:00 - 22:00 WIB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Katalog Villa Tretes. All rights reserved. Built with modern aesthetic & luxury design.</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="#home" style="color: var(--text-muted);">Kebijakan Privasi</a>
+          <a href="#home" style="color: var(--text-muted);">Syarat & Ketentuan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a href="https://wa.me/6285536581733?text=Halo%20Admin%20VillaTretes,%20saya%20ingin%20tanya%20sewa%20villa"
+    target="_blank" rel="noopener" class="floating-wa-btn" title="Hubungi Admin via WhatsApp">
+    <i class="ri-whatsapp-fill"></i>
+  </a>
+
+  <!-- INTERACTIVE VILLA DETAIL MODAL -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-container">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close Modal">
+        <i class="ri-close-line"></i>
+      </button>
+
+      <div class="modal-content-wrapper" id="modalDynamicContent">
+        <!-- Content will be rendered dynamically by script.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Data & Logic Files -->
+  <script src="villas-data.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
