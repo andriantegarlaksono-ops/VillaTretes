@@ -1302,15 +1302,57 @@ img {
 }
 
 /* ==========================================================================
-   RESPONSIVE LAYOUT BREAKPOINTS
+   RESPONSIVE LAYOUT & MOBILE PHONE OPTIMIZATIONS
    ========================================================================== */
+
+/* Category Tabs Touch Horizontal Scroll */
+.category-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+.category-tabs::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Mobile Toggle Button (Desktop default hidden) */
+.mobile-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-bold);
+  border-radius: var(--radius-md);
+  color: var(--accent-gold);
+  font-size: 1.4rem;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.mobile-toggle:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-gold);
+}
+
+/* Responsive Media Queries */
 @media (max-width: 1024px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+  
   .filter-grid {
     grid-template-columns: 1fr 1fr;
   }
 
   .modal-body-content {
     grid-template-columns: 1fr;
+    padding: 1.5rem;
   }
 
   .destination-grid {
@@ -1323,45 +1365,226 @@ img {
 }
 
 @media (max-width: 768px) {
+  .header-wrapper {
+    height: 70px;
+  }
+
+  .brand-logo {
+    font-size: 1.2rem;
+  }
+
+  .brand-logo .logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Show Mobile Menu Toggle */
+  .mobile-toggle {
+    display: flex;
+  }
+
+  /* Header CTA hide or adjust on small mobile */
+  .btn-header-wa span {
+    display: none;
+  }
+  .btn-header-wa {
+    padding: 0.55rem 0.85rem;
+  }
+
+  /* Mobile Slide-down Drawer Nav Menu */
+  #navMenu {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: rgba(7, 10, 16, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-bold);
+    padding: 1.5rem;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    z-index: 99;
+  }
+
+  #navMenu.active {
+    display: flex;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .nav-links a {
+    font-size: 1.1rem;
+    width: 100%;
+    padding: 0.5rem 0;
+  }
+
+  /* Hero Adjustments for Mobile */
+  .hero-section {
+    padding-top: 110px;
+    padding-bottom: 50px;
+    min-height: auto;
+  }
+
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.1rem;
+    letter-spacing: -0.5px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.98rem;
+    margin-bottom: 1.75rem;
   }
 
   .hero-stats {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 0.75rem;
+    padding: 1rem;
+    margin-top: 2rem;
   }
 
   .stat-item {
     border-right: none;
-    border-bottom: 1px solid var(--border-subtle);
-    padding-bottom: 0.75rem;
+    padding: 0.5rem;
   }
-  .stat-item:nth-child(2) { border-bottom: 1px solid var(--border-subtle); }
-  .stat-item:last-child { border-bottom: none; }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  /* Search & Filter Card on Mobile */
+  .search-filter-card {
+    padding: 1.25rem;
+  }
 
   .filter-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
+  .feature-toggles {
+    gap: 0.85rem;
+    padding-top: 1rem;
+  }
+
+  .toggle-chip {
+    font-size: 0.82rem;
+    padding: 0.35rem 0.6rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Villa Grid & Card on Mobile */
   .villa-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
-  .nav-links {
-    display: none; /* Can be toggled on mobile */
+  .card-media {
+    height: 210px;
+  }
+
+  .card-body {
+    padding: 1.25rem;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+  }
+
+  .card-specs {
+    padding: 0.65rem;
+    gap: 0.4rem;
+  }
+
+  .spec-item {
+    font-size: 0.75rem;
+  }
+
+  .price-amount {
+    font-size: 1.2rem;
+  }
+
+  /* Destination & FAQ on Mobile */
+  .section-title {
+    font-size: 1.8rem;
   }
 
   .destination-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .faq-header {
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  /* Modal on Mobile */
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .modal-container {
+    max-height: 95vh;
+    border-radius: var(--radius-lg);
+  }
+
+  .modal-close-btn {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
   }
 
   .modal-gallery-main {
-    height: 260px;
+    height: 220px;
   }
 
+  .modal-thumbnails {
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+  }
+
+  .thumb-item {
+    width: 75px;
+    height: 50px;
+  }
+
+  .modal-body-content {
+    padding: 1.25rem;
+    gap: 1.5rem;
+  }
+
+  .modal-title {
+    font-size: 1.5rem;
+  }
+
+  .modal-specs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .modal-amenities-list {
+    grid-template-columns: 1fr;
+  }
+
+  /* Footer on Mobile */
   .footer-grid {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .footer-bottom {
@@ -1369,4 +1592,28 @@ img {
     gap: 1rem;
     text-align: center;
   }
+
+  .floating-wa-btn {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 50px;
+    height: 50px;
+    font-size: 1.6rem;
+  }
 }
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .card-media {
+    height: 190px;
+  }
+
+  .btn-card-action {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.82rem;
+  }
+}
+

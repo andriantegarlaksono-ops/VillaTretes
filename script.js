@@ -54,6 +54,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Mobile Hamburger Menu Handler
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const navMenu = document.getElementById('navMenu');
+
+  if (mobileMenuBtn && navMenu) {
+    mobileMenuBtn.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      const icon = mobileMenuBtn.querySelector('i');
+      if (icon) {
+        icon.className = navMenu.classList.contains('active') ? 'ri-close-line' : 'ri-menu-line';
+      }
+    });
+
+    // Close menu when clicking nav link
+    const navLinksList = navMenu.querySelectorAll('a');
+    navLinksList.forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        const icon = mobileMenuBtn.querySelector('i');
+        if (icon) icon.className = 'ri-menu-line';
+      });
+    });
+  }
+
   // Fetch / Load Villas Data
   async function loadData() {
     try {
