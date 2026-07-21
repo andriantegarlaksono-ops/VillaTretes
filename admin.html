@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin - Katalog Villa Tretes</title>
+  
+  <!-- Google Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: var(--bg-primary);">
+
+  <!-- ADMIN PIN LOGIN MODAL -->
+  <div class="modal-overlay active" id="pinAuthModal" style="z-index: 2000; background: rgba(7, 10, 16, 0.96);">
+    <div class="modal-container" style="max-width: 420px; text-align: center; padding: 2.5rem 2rem;">
+      <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 1.25rem auto;">
+        <i class="ri-lock-password-fill"></i>
+      </div>
+      <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 0.5rem; color: var(--text-primary);">
+        Keamanan Admin
+      </h2>
+      <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.5rem;">
+        Masukkan PIN Keamanan untuk mengakses Dashboard Admin (PIN Default: <strong>1234</strong>).
+      </p>
+
+      <form id="pinAuthForm">
+        <div style="margin-bottom: 1.25rem;">
+          <input type="password" id="inputAdminPin" class="input-control" style="text-align: center; letter-spacing: 6px; font-size: 1.3rem; padding-left: 1rem; height: 54px;" placeholder="••••" maxlength="6" required autofocus>
+        </div>
+        <div id="pinErrorMsg" style="color: #EF4444; font-size: 0.82rem; margin-bottom: 1rem; display: none;">
+          PIN Salah! Silakan coba lagi.
+        </div>
+        <button type="submit" class="btn-header-wa" style="width: 100%; justify-content: center; height: 48px;">
+          <i class="ri-key-fill"></i> Masuk Dashboard
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN HEADER -->
+  <header class="site-header" style="position: relative;">
+    <div class="container header-wrapper">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">
+          <i class="ri-settings-4-fill"></i>
+        </div>
+        <span>ADMIN <strong>TRETES</strong></span>
+      </a>
+
+      <div class="header-cta" style="gap: 0.75rem;">
+        <a href="index.html" class="btn-card-action" style="height: 42px;">
+          <i class="ri-external-link-line"></i> Lihat Web Utama
+        </a>
+        <button id="btnExportData" class="btn-header-wa" style="background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold)); color: var(--bg-darkest);">
+          <i class="ri-download-cloud-2-line"></i> Export Data JSON / JS
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ADMIN CONTENT CONTAINER -->
+  <main class="container" style="padding-top: 2rem; padding-bottom: 5rem;">
+    
+    <!-- Top Action Toolbar -->
+    <div class="search-filter-card" style="margin-bottom: 2rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h1 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800;">Kelola Katalog Villa</h1>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Tambah, ubah, atau hapus data villa. Setelah selesai, klik tombol <strong>Export Data</strong> untuk menyimpan berkas.</p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button id="btnAddVilla" class="btn-header-wa">
+            <i class="ri-add-line"></i> Tambah Villa Baru
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Search Bar in Admin -->
+      <div style="margin-top: 1.5rem;">
+        <div class="input-with-icon">
+          <i class="ri-search-line"></i>
+          <input type="text" id="adminSearchInput" class="input-control" placeholder="Cari nama villa di tabel admin...">
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN VILLA TABLE -->
+    <div class="search-filter-card" style="padding: 0; overflow: hidden;">
+      <div style="overflow-x: auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Nama Villa</th>
+              <th>Kategori</th>
+              <th>Kapasitas</th>
+              <th>Harga Weekday</th>
+              <th>Harga Weekend</th>
+              <th>Rating</th>
+              <th style="text-align: center;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="adminVillaTableBody">
+            <!-- Dynamic Rows rendered via admin.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FORM ADD / EDIT MODAL -->
+  <div class="modal-overlay" id="formModal">
+    <div class="modal-container" style="max-width: 750px;">
+      <button class="modal-close-btn" id="formModalCloseBtn">
+        <i class="ri-close-line"></i>
+      </button>
+
+      <div style="padding: 2rem;">
+        <h2 id="formModalTitle" style="font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 1.5rem; color: var(--accent-gold);">
+          Tambah Villa Baru
+        </h2>
+
+        <form id="villaForm">
+          <input type="hidden" id="formVillaId">
+
+          <div class="filter-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="filter-group">
+              <label for="formName">Nama Villa *</label>
+              <input type="text" id="formName" class="input-control" style="padding-left: 1rem;" placeholder="Contoh: Villa Grand Arjuno" required>
+            </div>
+
+            <div class="filter-group">
+              <label for="formCategory">Kategori *</label>
+              <select id="formCategory" class="select-control" required>
+                <option value="Luxury">Luxury</option>
+                <option value="Modern">Modern</option>
+                <option value="Family">Family</option>
+                <option value="Classic">Classic</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="filter-group" style="margin-bottom: 1rem;">
+            <label for="formTagline">Tagline / Slogan Ringkas</label>
+            <input type="text" id="formTagline" class="input-control" style="padding-left: 1rem;" placeholder="Contoh: Modern Villa dengan Infinity Pool & View Gunung">
+          </div>
+
+          <div class="filter-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="filter-group">
+              <label for="formPriceWeekday">Harga Weekday (Rp) *</label>
+              <input type="number" id="formPriceWeekday" class="input-control" style="padding-left: 1rem;" placeholder="2500000" required>
+            </div>
+
+            <div class="filter-group">
+              <label for="formPriceWeekend">Harga Weekend (Rp) *</label>
+              <input type="number" id="formPriceWeekend" class="input-control" style="padding-left: 1rem;" placeholder="3400000" required>
+            </div>
+          </div>
+
+          <div class="filter-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+            <div class="filter-group">
+              <label for="formCapacity">Kapasitas (Tamu)</label>
+              <input type="number" id="formCapacity" class="input-control" style="padding-left: 1rem;" value="20" required>
+            </div>
+
+            <div class="filter-group">
+              <label for="formBedrooms">Kamar Tidur</label>
+              <input type="number" id="formBedrooms" class="input-control" style="padding-left: 1rem;" value="4" required>
+            </div>
+
+            <div class="filter-group">
+              <label for="formBathrooms">Kamar Mandi</label>
+              <input type="number" id="formBathrooms" class="input-control" style="padding-left: 1rem;" value="3" required>
+            </div>
+
+            <div class="filter-group">
+              <label for="formRating">Rating (1-5)</label>
+              <input type="number" step="0.01" id="formRating" class="input-control" style="padding-left: 1rem;" value="4.90" required>
+            </div>
+          </div>
+
+          <div class="filter-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="filter-group">
+              <label for="formLocation">Lokasi / Area</label>
+              <input type="text" id="formLocation" class="input-control" style="padding-left: 1rem;" placeholder="Pecalukan, Tretes" required>
+            </div>
+
+            <div class="filter-group">
+              <label for="formPoolType">Tipe Private Pool</label>
+              <input type="text" id="formPoolType" class="input-control" style="padding-left: 1rem;" placeholder="Infinity Private Pool">
+            </div>
+          </div>
+
+          <div class="filter-group" style="margin-bottom: 1rem;">
+            <label for="formAmenities">Fasilitas (Pisahkan dengan Koma)</label>
+            <input type="text" id="formAmenities" class="input-control" style="padding-left: 1rem;" placeholder="Private Pool, View Gunung, Meja Biliar, Karaoke, Wifi 100 Mbps, BBQ Grill">
+          </div>
+
+          <div class="filter-group" style="margin-bottom: 1rem;">
+            <label for="formImages">URL Foto (1 URL per baris)</label>
+            <textarea id="formImages" class="calc-select" style="height: 90px; resize: vertical;" placeholder="https://images.unsplash.com/photo-xxx&#10;https://images.unsplash.com/photo-yyy"></textarea>
+          </div>
+
+          <div class="filter-group" style="margin-bottom: 1.5rem;">
+            <label for="formDescription">Deskripsi Lengkap Villa</label>
+            <textarea id="formDescription" class="calc-select" style="height: 90px; resize: vertical;" placeholder="Tuliskan deskripsi keunggulan villa..."></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+            <button type="button" class="btn-card-action" onclick="closeFormModal()">Batal</button>
+            <button type="submit" class="btn-header-wa">
+              <i class="ri-save-line"></i> Simpan Villa
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT & DOWNLOAD DATA MODAL -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal-container" style="max-width: 800px;">
+      <button class="modal-close-btn" id="exportModalCloseBtn">
+        <i class="ri-close-line"></i>
+      </button>
+
+      <div style="padding: 2rem;">
+        <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 0.5rem; color: var(--accent-gold);">
+          <i class="ri-download-cloud-2-line"></i> Export Data Katalog Villa
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          Unduh atau salin berkas di bawah ini untuk memperbarui katalog villa di folder proyek Anda:
+        </p>
+
+        <!-- Action Download Buttons -->
+        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <button id="btnDownloadJson" class="btn-header-wa" style="background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark)); color: var(--bg-darkest);">
+            <i class="ri-file-download-fill"></i> Download data.json
+          </button>
+          <button id="btnDownloadJs" class="btn-header-wa">
+            <i class="ri-file-code-fill"></i> Download villas-data.js
+          </button>
+          <button id="btnCopyJson" class="btn-card-action">
+            <i class="ri-clipboard-line"></i> Salin Teks JSON
+          </button>
+        </div>
+
+        <!-- Code Output Display -->
+        <div class="filter-group" style="margin-bottom: 1rem;">
+          <label>Preview Format JSON (data.json):</label>
+          <textarea id="jsonOutputText" class="calc-select" style="height: 250px; font-family: monospace; font-size: 0.82rem; white-space: pre;" readonly></textarea>
+        </div>
+
+        <div style="background: var(--bg-primary); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); font-size: 0.85rem; color: var(--text-secondary);">
+          <strong style="color: var(--accent-gold); display: block; margin-bottom: 0.25rem;">📌 Cara Simpan Permanen:</strong>
+          Gantikan berkas <code>data.json</code> dan <code>villas-data.js</code> di folder <code>d:\AND\Katalog Villa Tretes</code> dengan berkas hasil download di atas.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Data Files -->
+  <script src="villas-data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
