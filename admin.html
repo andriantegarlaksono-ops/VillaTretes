@@ -16,33 +16,6 @@
 </head>
 <body style="background-color: var(--bg-primary);">
 
-  <!-- ADMIN PIN LOGIN MODAL -->
-  <div class="modal-overlay active" id="pinAuthModal" style="z-index: 2000; background: rgba(7, 10, 16, 0.96);">
-    <div class="modal-container" style="max-width: 420px; text-align: center; padding: 2.5rem 2rem;">
-      <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 1.25rem auto;">
-        <i class="ri-lock-password-fill"></i>
-      </div>
-      <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 0.5rem; color: var(--text-primary);">
-        Keamanan Admin
-      </h2>
-      <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.5rem;">
-        Masukkan PIN Keamanan untuk mengakses Dashboard Admin (PIN Default: <strong>1234</strong>).
-      </p>
-
-      <form id="pinAuthForm">
-        <div style="margin-bottom: 1.25rem;">
-          <input type="password" id="inputAdminPin" class="input-control" style="text-align: center; letter-spacing: 6px; font-size: 1.3rem; padding-left: 1rem; height: 54px;" placeholder="••••" maxlength="6" required autofocus>
-        </div>
-        <div id="pinErrorMsg" style="color: #EF4444; font-size: 0.82rem; margin-bottom: 1rem; display: none;">
-          PIN Salah! Silakan coba lagi.
-        </div>
-        <button type="submit" class="btn-header-wa" style="width: 100%; justify-content: center; height: 48px;">
-          <i class="ri-key-fill"></i> Masuk Dashboard
-        </button>
-      </form>
-    </div>
-  </div>
-
   <!-- ADMIN HEADER -->
   <header class="site-header" style="position: relative;">
     <div class="container header-wrapper">
