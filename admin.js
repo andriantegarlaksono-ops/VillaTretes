@@ -1,5 +1,5 @@
 /**
- * KATALOG VILLA TRETES - ADMIN DASHBOARD LOGIC
+ * KATALOG VILLA TRETES - ADMIN DASHBOARD LOGIC (SEWA KAMARAN)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,17 +21,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const formName = document.getElementById('formName');
   const formCategory = document.getElementById('formCategory');
   const formTagline = document.getElementById('formTagline');
-  const formPriceWeekday = document.getElementById('formPriceWeekday');
-  const formPriceWeekend = document.getElementById('formPriceWeekend');
-  const formCapacity = document.getElementById('formCapacity');
-  const formBedrooms = document.getElementById('formBedrooms');
-  const formBathrooms = document.getElementById('formBathrooms');
   const formRating = document.getElementById('formRating');
   const formLocation = document.getElementById('formLocation');
-  const formPoolType = document.getElementById('formPoolType');
   const formAmenities = document.getElementById('formAmenities');
   const formImages = document.getElementById('formImages');
   const formDescription = document.getElementById('formDescription');
+
+  // Room Editor Elements
+  const btnAddRoomType = document.getElementById('btnAddRoomType');
+  const adminRoomsContainer = document.getElementById('adminRoomsContainer');
 
   // Export Modal Elements
   const exportModal = document.getElementById('exportModal');
@@ -46,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
   }
 
-  // Load Initial Data (Check LocalStorage, fallback to window.VILLAS_DATA or fetch)
+  // Load Initial Data
   async function loadAdminData() {
     const savedData = localStorage.getItem('admin_villas_dataset');
     if (savedData) {
@@ -79,53 +77,171 @@ document.addEventListener('DOMContentLoaded', () => {
   // Save State to LocalStorage
   function saveLocalDataset() {
     localStorage.setItem('admin_villas_dataset', JSON.stringify(villas));
-    // Also sync window.VILLAS_DATA for immediate local tab preview
     window.VILLAS_DATA = villas;
   }
 
-  // Render Table Rows
+  // Helper to calculate room price range
+  function getRoomPriceRange(v) {
+    if (!v.roomTypes || v.roomTypes.length === 0) return 'Belum Ada Kamar';
+    const prices = v.roomTypes.map(r => r.priceWeekday);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    if (min === max) return formatIDR(min);
+    return `${formatIDR(min)} - ${formatIDR(max)}`;
+  }
+
+  // Render Admin Table Rows
   function renderTable(dataset) {
     if (!adminVillaTableBody) return;
 
     if (dataset.length === 0) {
       adminVillaTableBody.innerHTML = `
         <tr>
-          <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-muted);">
-            Belum ada data villa. Klik <strong>Tambah Villa Baru</strong> di atas.
+          <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+            Belum ada data penginapan. Klik <strong>Tambah Penginapan Baru</strong> di atas.
           </td>
         </tr>
       `;
       return;
     }
 
-    adminVillaTableBody.innerHTML = dataset.map(v => `
-      <tr>
-        <td>
-          <img src="${v.images && v.images[0] ? v.images[0] : 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=300&q=80'}" alt="${v.name}" class="admin-thumb">
-        </td>
-        <td>
-          <strong style="color: var(--text-primary); font-size: 0.95rem;">${v.name}</strong>
-          <div style="font-size: 0.78rem; color: var(--text-muted);">${v.location}</div>
-        </td>
-        <td>
-          <span class="badge ${v.category === 'Luxury' ? 'badge-gold' : (v.category === 'Modern' ? 'badge-cyan' : 'badge-emerald')}">${v.category}</span>
-        </td>
-        <td>${v.capacity} Tamu</td>
-        <td style="color: var(--accent-gold); font-weight: 700;">${formatIDR(v.priceWeekday)}</td>
-        <td style="color: var(--accent-gold); font-weight: 700;">${formatIDR(v.priceWeekend)}</td>
-        <td>⭐ ${v.rating}</td>
-        <td style="text-align: center;">
-          <div style="display: flex; gap: 0.4rem; justify-content: center;">
-            <button class="btn-action-icon btn-action-edit" onclick="editVilla('${v.id}')" title="Ubah Data">
-              <i class="ri-pencil-fill"></i>
-            </button>
-            <button class="btn-action-icon btn-action-delete" onclick="deleteVilla('${v.id}')" title="Hapus Villa">
-              <i class="ri-delete-bin-fill"></i>
-            </button>
-          </div>
-        </td>
-      </tr>
-    `).join('');
+    adminVillaTableBody.innerHTML = dataset.map(v => {
+      const roomTypesCount = v.roomTypes ? v.roomTypes.length : 0;
+      const priceRange = getRoomPriceRange(v);
+
+      return `
+        <tr>
+          <td>
+            <img src="${v.images && v.images[0] ? v.images[0] : 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=300&q=80'}" alt="${v.name}" class="admin-thumb">
+          </td>
+          <td>
+            <strong style="color: var(--text-primary); font-size: 0.95rem;">${v.name}</strong>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">${v.location}</div>
+          </td>
+          <td>
+            <span class="badge ${v.category === 'Luxury' ? 'badge-gold' : (v.category === 'Modern' ? 'badge-cyan' : 'badge-emerald')}">${v.category}</span>
+          </td>
+          <td>
+            <span class="badge badge-gold">${roomTypesCount} Tipe Kamar</span>
+          </td>
+          <td style="color: var(--accent-gold); font-weight: 700;">${priceRange}</td>
+          <td>⭐ ${v.rating}</td>
+          <td style="text-align: center;">
+            <div style="display: flex; gap: 0.4rem; justify-content: center;">
+              <button class="btn-action-icon btn-action-edit" onclick="editVilla('${v.id}')" title="Ubah Data Penginapan & Kamar">
+                <i class="ri-pencil-fill"></i>
+              </button>
+              <button class="btn-action-icon btn-action-delete" onclick="deleteVilla('${v.id}')" title="Hapus Penginapan">
+                <i class="ri-delete-bin-fill"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Render Sub-Form Room Type Card
+  function renderRoomTypeCard(room = {}) {
+    const cardId = 'room-card-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+    const card = document.createElement('div');
+    card.className = 'admin-room-card';
+    card.id = cardId;
+
+    card.innerHTML = `
+      <div class="admin-room-header">
+        <span class="admin-room-title">
+          <i class="ri-hotel-bed-fill"></i> <span class="room-title-display">${room.name || 'Tipe Kamar Baru'}</span>
+        </span>
+        <button type="button" class="btn-action-icon btn-action-delete" onclick="removeRoomCard('${cardId}')" title="Hapus Kamar Ini">
+          <i class="ri-delete-bin-line"></i>
+        </button>
+      </div>
+
+      <input type="hidden" class="room-id" value="${room.id || ('rt-' + Date.now() + '-' + Math.floor(Math.random() * 100))}">
+
+      <div class="filter-grid" style="grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+        <div class="filter-group">
+          <label style="font-size: 0.8rem;">Nama Tipe Kamar *</label>
+          <input type="text" class="input-control room-name" style="padding-left: 0.75rem; height: 40px; font-size: 0.88rem;" 
+                 placeholder="Contoh: Superior Mountain View" value="${room.name || ''}" 
+                 oninput="this.closest('.admin-room-card').querySelector('.room-title-display').textContent = this.value || 'Tipe Kamar Baru'" required>
+        </div>
+
+        <div class="filter-group">
+          <label style="font-size: 0.8rem;">Tipe Kasur</label>
+          <input type="text" class="input-control room-bed-type" style="padding-left: 0.75rem; height: 40px; font-size: 0.88rem;" 
+                 placeholder="Contoh: 1 King Bed / 2 Twin Beds" value="${room.bedType || '1 King Bed'}">
+        </div>
+      </div>
+
+      <div class="filter-grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+        <div class="filter-group">
+          <label style="font-size: 0.8rem;">Harga Weekday (Rp) *</label>
+          <input type="number" class="input-control room-price-weekday" style="padding-left: 0.75rem; height: 40px; font-size: 0.88rem;" 
+                 placeholder="350000" value="${room.priceWeekday || 350000}" required>
+        </div>
+
+        <div class="filter-group">
+          <label style="font-size: 0.8rem;">Harga Weekend (Rp) *</label>
+          <input type="number" class="input-control room-price-weekend" style="padding-left: 0.75rem; height: 40px; font-size: 0.88rem;" 
+                 placeholder="450000" value="${room.priceWeekend || 450000}" required>
+        </div>
+
+        <div class="filter-group">
+          <label style="font-size: 0.8rem;">Kapasitas (Orang) *</label>
+          <input type="number" class="input-control room-capacity" style="padding-left: 0.75rem; height: 40px; font-size: 0.88rem;" 
+                 placeholder="2" value="${room.capacity || 2}" required>
+        </div>
+      </div>
+
+      <div class="filter-group" style="margin-bottom: 0.75rem;">
+        <label style="font-size: 0.8rem;">Deskripsi Spesifik Kamar Ini *</label>
+        <textarea class="calc-select room-description" style="height: 60px; font-size: 0.85rem; resize: vertical;" 
+                  placeholder="Ketikkan deskripsi lengkap fasilitas dan keunggulan kamar ini...">${room.description || ''}</textarea>
+      </div>
+
+      <div class="filter-group" style="margin-bottom: 0.75rem;">
+        <label style="font-size: 0.8rem;">Fasilitas Khusus Kamar (Pisahkan Koma)</label>
+        <input type="text" class="input-control room-amenities" style="padding-left: 0.75rem; height: 40px; font-size: 0.85rem;" 
+               placeholder="AC, Smart TV, Hot Shower, Balkon Private" value="${Array.isArray(room.amenities) ? room.amenities.join(', ') : ''}">
+      </div>
+
+      <div class="filter-group">
+        <label style="font-size: 0.8rem;">URL Foto Kamar (1 URL per baris)</label>
+        <textarea class="calc-select room-images" style="height: 50px; font-size: 0.82rem; resize: vertical;" 
+                  placeholder="https://images.unsplash.com/photo-kamar-1&#10;https://images.unsplash.com/photo-kamar-2">${Array.isArray(room.images) ? room.images.join('\n') : ''}</textarea>
+      </div>
+    `;
+
+    adminRoomsContainer.appendChild(card);
+  }
+
+  // Remove Room Card
+  window.removeRoomCard = function(cardId) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    if (adminRoomsContainer.children.length <= 1) {
+      alert('Setidaknya penginapan harus memiliki 1 tipe kamar!');
+      return;
+    }
+    card.remove();
+  };
+
+  // Add New Room Card Button Click
+  if (btnAddRoomType) {
+    btnAddRoomType.addEventListener('click', () => {
+      renderRoomTypeCard({
+        name: 'Tipe Kamar Baru',
+        priceWeekday: 350000,
+        priceWeekend: 450000,
+        capacity: 2,
+        bedType: '1 King Bed',
+        description: 'Kamar nyaman dengan pemandangan pegunungan.',
+        amenities: ['AC', 'Smart TV', 'Hot Shower'],
+        images: []
+      });
+    });
   }
 
   // Filter Table Search
@@ -141,18 +257,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Open Form Modal for Add
+  // Open Form Modal for Add New Property
   if (btnAddVilla) {
     btnAddVilla.addEventListener('click', () => {
-      formModalTitle.textContent = 'Tambah Villa Baru';
+      formModalTitle.textContent = 'Tambah Penginapan Baru';
       villaForm.reset();
       formVillaId.value = '';
+      adminRoomsContainer.innerHTML = '';
+      
+      // Add default initial room
+      renderRoomTypeCard({
+        name: 'Superior Room',
+        priceWeekday: 350000,
+        priceWeekend: 450000,
+        capacity: 2,
+        bedType: '1 King Bed',
+        description: 'Kamar Superior nyaman dengan pemandangan pegunungan.',
+        amenities: ['AC', 'Smart TV', 'Kamar Mandi Dalam', 'Hot Shower'],
+        images: ['https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80']
+      });
+
       formModal.classList.add('active');
       document.body.style.overflow = 'hidden';
     });
   }
 
-  // Open Form Modal for Edit
+  // Open Form Modal for Edit Existing Property
   window.editVilla = function(id) {
     const v = villas.find(item => item.id === id);
     if (!v) return;
@@ -162,17 +292,28 @@ document.addEventListener('DOMContentLoaded', () => {
     formName.value = v.name;
     formCategory.value = v.category;
     formTagline.value = v.tagline || '';
-    formPriceWeekday.value = v.priceWeekday;
-    formPriceWeekend.value = v.priceWeekend;
-    formCapacity.value = v.capacity;
-    formBedrooms.value = v.bedrooms;
-    formBathrooms.value = v.bathrooms;
     formRating.value = v.rating;
     formLocation.value = v.location;
-    formPoolType.value = v.poolType || '';
     formAmenities.value = Array.isArray(v.amenities) ? v.amenities.join(', ') : '';
     formImages.value = Array.isArray(v.images) ? v.images.join('\n') : '';
     formDescription.value = v.description || '';
+
+    // Render Existing Room Types Sub-Form Cards
+    adminRoomsContainer.innerHTML = '';
+    if (v.roomTypes && v.roomTypes.length > 0) {
+      v.roomTypes.forEach(rt => renderRoomTypeCard(rt));
+    } else {
+      renderRoomTypeCard({
+        name: 'Standard Room',
+        priceWeekday: 300000,
+        priceWeekend: 400000,
+        capacity: 2,
+        bedType: '1 King Bed',
+        description: 'Kamar nyaman di Tretes.',
+        amenities: ['AC', 'Hot Shower'],
+        images: []
+      });
+    }
 
     formModal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -197,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   if (formModalCloseBtn) formModalCloseBtn.addEventListener('click', closeFormModal);
 
-  // Form Submit Handler (Add or Update)
+  // Form Submit Handler (Add or Update Property & Nested Room Types)
   if (villaForm) {
     villaForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -206,24 +347,52 @@ document.addEventListener('DOMContentLoaded', () => {
       const amenitiesList = formAmenities.value.split(',').map(s => s.trim()).filter(s => s.length > 0);
       const imagesList = formImages.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
 
+      // Collect Room Types from Sub-Form Cards
+      const roomCards = adminRoomsContainer.querySelectorAll('.admin-room-card');
+      const roomTypes = [];
+
+      roomCards.forEach(card => {
+        const rId = card.querySelector('.room-id').value;
+        const rName = card.querySelector('.room-name').value.trim() || 'Tipe Kamar';
+        const rBedType = card.querySelector('.room-bed-type').value.trim() || '1 King Bed';
+        const rPriceWk = parseInt(card.querySelector('.room-price-weekday').value, 10) || 300000;
+        const rPriceWknd = parseInt(card.querySelector('.room-price-weekend').value, 10) || 400000;
+        const rCapacity = parseInt(card.querySelector('.room-capacity').value, 10) || 2;
+        const rDescription = card.querySelector('.room-description').value.trim() || 'Kamar nyaman.';
+        const rAmenities = card.querySelector('.room-amenities').value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+        const rImages = card.querySelector('.room-images').value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+
+        roomTypes.push({
+          id: rId,
+          name: rName,
+          priceWeekday: rPriceWk,
+          priceWeekend: rPriceWknd,
+          capacity: rCapacity,
+          bedType: rBedType,
+          bathrooms: 1,
+          description: rDescription,
+          amenities: rAmenities.length > 0 ? rAmenities : ['AC', 'Hot Shower', 'Smart TV'],
+          images: rImages.length > 0 ? rImages : (imagesList.length > 0 ? [imagesList[0]] : ['https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80'])
+        });
+      });
+
+      if (roomTypes.length === 0) {
+        alert('Mohon isi setidaknya 1 tipe kamar!');
+        return;
+      }
+
       const villaObj = {
         id: existingId || ('v-' + Date.now()),
         name: formName.value,
         tagline: formTagline.value,
         category: formCategory.value,
-        priceWeekday: parseInt(formPriceWeekday.value, 10) || 0,
-        priceWeekend: parseInt(formPriceWeekend.value, 10) || 0,
         rating: parseFloat(formRating.value) || 4.8,
         reviewsCount: existingId ? (villas.find(x => x.id === existingId)?.reviewsCount || 10) : 1,
-        capacity: parseInt(formCapacity.value, 10) || 10,
-        bedrooms: parseInt(formBedrooms.value, 10) || 3,
-        bathrooms: parseInt(formBathrooms.value, 10) || 2,
         location: formLocation.value,
-        hasPool: amenitiesList.some(a => a.toLowerCase().includes('pool')) || formPoolType.value.length > 0,
-        poolType: formPoolType.value || 'Private Swimming Pool',
-        amenities: amenitiesList.length > 0 ? amenitiesList : ['Private Pool', 'Wifi', 'Dapur Lengkap'],
+        amenities: amenitiesList.length > 0 ? amenitiesList : ['View Gunung', 'Wifi', 'Water Heater', 'BBQ Area'],
         images: imagesList.length > 0 ? imagesList : ['https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80'],
-        description: formDescription.value || 'Villa nyaman di Tretes Prigen.'
+        description: formDescription.value || 'Penginapan nyaman di Tretes Prigen.',
+        roomTypes: roomTypes
       };
 
       if (existingId) {
@@ -237,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderTable(villas);
       closeFormModal();
 
-      alert('Berhasil menyimpan data villa! Jangan lupa klik "Export Data" untuk mengunduh berkas data.json baru.');
+      alert('Berhasil menyimpan data penginapan dan tipe kamar! Jangan lupa klik "Export Data" untuk mengunduh berkas data.json / villas-data.js baru.');
     });
   }
 

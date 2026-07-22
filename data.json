@@ -1,270 +1,297 @@
 [
   {
     "id": "v-grand-arjuno",
-    "name": "Villa Grand Arjuno",
-    "tagline": "Luxury Modern Villa dengan Infinity Pool & Panoramic View Arjuno",
+    "name": "Penginapan Grand Arjuno",
+    "tagline": "Penginapan Modern dengan Panoramic View Gunung Arjuno & Balkon Private",
     "category": "Luxury",
-    "priceWeekday": 2500000,
-    "priceWeekend": 3400000,
     "rating": 4.95,
     "reviewsCount": 42,
-    "capacity": 25,
-    "bedrooms": 5,
-    "bathrooms": 4,
     "location": "Pecalukan, Tretes - Prigen",
-    "hasPool": true,
-    "poolType": "Infinity Private Pool (View Pegunungan)",
     "amenities": [
-      "Private Pool",
-      "View Gunung",
+      "View Gunung Arjuno",
       "Meja Biliar",
-      "Karaoke & Smart TV 65\"",
+      "Karaoke & Smart TV",
       "Wifi 100 Mbps",
       "BBQ Grill Stand",
-      "Dapur Modren Standard Chef",
+      "Dapur Bersama Standard Chef",
       "Water Heater",
-      "Balkon Sunset",
       "Garasi 5 Mobil"
     ],
     "images": [
       "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
     ],
-    "description": "Villa Grand Arjuno menyajikan konsep arsitektur kontemporer bernuansa macho dan elegan di kawasan paling sejuk Tretes. Dilengkapi dengan Infinity Pool menghadap langsung ke keindahan Gunung Arjuno, ruang keluarga luas untuk gathering corporate atau keluarga besar, serta fasilitas hiburan kelas atas seperti meja biliar profesional dan karaoke akustik."
+    "description": "Penginapan Grand Arjuno menyajikan konsep arsitektur kontemporer bernuansa sejuk dan elegan di kawasan utama Tretes. Menyediakan pilihan sewa kamar eksklusif mulai dari tipe Superior hingga Executive Suite dengan panorama Gunung Arjuno, ruang lounge bersama, serta fasilitas biliar profesional.",
+    "roomTypes": [
+      {
+        "id": "rt-arjuno-1",
+        "name": "Superior Mountain View",
+        "priceWeekday": 350000,
+        "priceWeekend": 450000,
+        "capacity": 2,
+        "bedType": "1 King Bed / 2 Twin Beds",
+        "bathrooms": 1,
+        "description": "Kamar Superior dengan balkon pribadi menghadap pemandangan langsung Gunung Arjuno. Dilengkapi AC/hawa sejuk alami, Smart TV 43 inch, meja kerja, dan kamar mandi dalam bershower air hangat.",
+        "amenities": ["Balkon View Gunung", "Smart TV 43\"", "Shower Air Hangat", "Wifi Cepat", "Teko Listrik Kopi/Teh"],
+        "images": [
+          "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80"
+        ]
+      },
+      {
+        "id": "rt-arjuno-2",
+        "name": "Deluxe Family Room",
+        "priceWeekday": 600000,
+        "priceWeekend": 750000,
+        "capacity": 4,
+        "bedType": "2 King Beds",
+        "bathrooms": 1,
+        "description": "Kamar Deluxe ekstra luas dirancang khusus untuk rombongan keluarga atau teman. Memiliki 2 tempat tidur ukuran King, area lounge santai, Smart TV 50 inch, dan lemari pakaian besar.",
+        "amenities": ["2 Tempat Tidur King", "Sofa Lounge", "Smart TV 50\"", "Water Heater", "Mini Fridge"],
+        "images": [
+          "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80"
+        ]
+      },
+      {
+        "id": "rt-arjuno-3",
+        "name": "Executive Suite Arjuno",
+        "priceWeekday": 950000,
+        "priceWeekend": 1200000,
+        "capacity": 6,
+        "bedType": "2 Super King Beds + Sofa Bed",
+        "bathrooms": 2,
+        "description": "Tipe kamar kasta tertinggi di Penginapan Grand Arjuno. Dilengkapi teras rooftop pribadi, 2 kamar mandi dalam dengan Bathtub, ruang tamu privat, dan perlengkapan mandi premium.",
+        "amenities": ["Private Rooftop Terrace", "Bathtub & Jacuzzi", "Living Room", "Smart TV 65\"", "Coffee Machine"],
+        "images": [
+          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80"
+        ]
+      }
+    ]
   },
   {
     "id": "v-black-diamond",
-    "name": "Villa Black Diamond",
-    "tagline": "Eksklusif Industrial Modern dengan Heated Pool & Private Lounge",
+    "name": "Wisma Black Diamond",
+    "tagline": "Eksklusif Industrial Modern dengan Private Lounge & Cinema Room",
     "category": "Luxury",
-    "priceWeekday": 3100000,
-    "priceWeekend": 4200000,
     "rating": 4.98,
     "reviewsCount": 38,
-    "capacity": 30,
-    "bedrooms": 6,
-    "bathrooms": 6,
     "location": "Semeru Street, Tretes Pusat",
-    "hasPool": true,
-    "poolType": "Warm Heated Private Pool",
     "amenities": [
-      "Heated Pool",
       "Private Lounge Bar",
       "Meja Biliar 9ft",
       "Playstation 5 & Cinema Room",
       "Wifi 200 Mbps",
       "BBQ Area & Fire Pit",
-      "Dapur Island Premium",
-      "AC All Bedrooms",
+      "Dapur Bersama Island",
       "Keamanan 24 Jam",
       "Garasi 8 Mobil"
     ],
     "images": [
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80"
     ],
-    "description": "Dirancang untuk Anda yang mengutamakan privasi tinggi dan kemewahan bold bermaterial obsidian stone, kaca tempered, dan kayu jati tua. Villa Black Diamond memiliki fasilitas kolam renang air hangat (Heated Pool) cocok untuk cuaca sejuk malam hari di Tretes, dilengkapi arena biliar dan fire pit outdoor untuk malam keakraban."
+    "description": "Dirancang untuk Anda yang mengutamakan kenyamanan menginap premium bermaterial obsidian stone & kayu jati tua. Wisma Black Diamond menyediakan opsi sewa kamar berkualitas tinggi dengan fasilitas cinema room dan fire pit outdoor.",
+    "roomTypes": [
+      {
+        "id": "rt-diamond-1",
+        "name": "Standard Obsidian Room",
+        "priceWeekday": 280000,
+        "priceWeekend": 380000,
+        "capacity": 2,
+        "bedType": "1 Queen Bed",
+        "bathrooms": 1,
+        "description": "Kamar bergaya minimalis industrial modern dengan tempat tidur Queen yang sangat nyaman, pencahayaan warm ambient, Smart TV, dan akses mudah ke lounge utama.",
+        "amenities": ["Warm Ambient Lighting", "Smart TV", "Shower Hot Water", "Wifi 200 Mbps"],
+        "images": [
+          "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80"
+        ]
+      },
+      {
+        "id": "rt-diamond-2",
+        "name": "Deluxe Lounge Room",
+        "priceWeekday": 550000,
+        "priceWeekend": 700000,
+        "capacity": 3,
+        "bedType": "1 King Bed + 1 Single Bed",
+        "bathrooms": 1,
+        "description": "Kamar Deluxe berukuran sedang dengan kombinasi kasur King & Single. Dilengkapi fasilitas kerja modern, soundbar audio, dan pemandangan area taman inner-court.",
+        "amenities": ["Soundbar Bluetooth", "Workdesk Premium", "Water Heater", "Smart TV 50\""],
+        "images": [
+          "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80"
+        ]
+      },
+      {
+        "id": "rt-diamond-3",
+        "name": "VIP Suite Obsidian",
+        "priceWeekday": 850000,
+        "priceWeekend": 1100000,
+        "capacity": 5,
+        "bedType": "2 King Beds",
+        "bathrooms": 2,
+        "description": "Kamar VIP mewah dengan area santai privat, Bathtub kamar mandi dalam, akses langsung ke Cinema Room, serta layanan teko kopi otomatis.",
+        "amenities": ["Private Bathtub", "Akses Cinema Room", "Nespresso Coffee Maker", "2 Bathroom"],
+        "images": [
+          "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80"
+        ]
+      }
+    ]
   },
   {
-    "id": "v-pinus-forest",
-    "name": "Villa Pinus Horizon",
-    "tagline": "Kombinasi Modern Timber & Batu Alam di Tengah Hutan Pinus Tretes",
+    "id": "v-pinus-horizon",
+    "name": "Griya Pinus Horizon",
+    "tagline": "Penginapan Timber Natural di Tengah Suasana Hutan Pinus Tretes",
     "category": "Modern",
-    "priceWeekday": 1800000,
-    "priceWeekend": 2400000,
     "rating": 4.88,
     "reviewsCount": 54,
-    "capacity": 18,
-    "bedrooms": 4,
-    "bathrooms": 3,
     "location": "Jalan Kakek Bodo, Tretes",
-    "hasPool": true,
-    "poolType": "Private Lagoon Pool",
     "amenities": [
-      "Private Pool",
       "Hutan Pinus View",
       "Outdoor BBQ Deck",
-      "Fireplace (Tungku Api)",
+      "Tungku Api Kehangatan",
       "Karaoke Set",
       "Wifi High Speed",
-      "Dapur Lengkap",
       "Water Heater",
-      "Taman Luas 1000m2",
+      "Taman Sejuk 1000m2",
       "Garasi 4 Mobil"
     ],
     "images": [
       "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
     ],
-    "description": "Menawarkan atmosfer pegunungan autentik dengan desain arsitektur bernuansa hutan tropis & batu granit hitam. Terletak sangat dekat dengan akses wisata Air Terjun Kakek Bodo, villa ini sangat cocok untuk reuni alumni, gathering komunitas motor, maupun liburan keluarga besar."
+    "description": "Menawarkan atmosfer pegunungan autentik dengan desain arsitektur kayu alam & batu granit hitam. Terletak dekat dengan akses wisata Air Terjun Kakek Bodo, menyediakan tipe kamar hangat untuk rileks dari hiruk pikuk kota.",
+    "roomTypes": [
+      {
+        "id": "rt-pinus-1",
+        "name": "Superior Pine Room",
+        "priceWeekday": 300000,
+        "priceWeekend": 400000,
+        "capacity": 2,
+        "bedType": "1 Queen Bed",
+        "bathrooms": 1,
+        "description": "Kamar Superior bernuansa kayu pinus alami dengan jendela besar menghadap pepohonan rindang. Sangat sejuk dan cocok untuk istirahat tenang pasangan atau solo traveler.",
+        "amenities": ["Pine Forest View", "Kamar Mandi Shower", "Hot Water", "Kopi & Teh"],
+        "images": [
+          "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1200&q=80"
+        ]
+      },
+      {
+        "id": "rt-pinus-2",
+        "name": "Family Cottage Room",
+        "priceWeekday": 500000,
+        "priceWeekend": 650000,
+        "capacity": 4,
+        "bedType": "2 Queen Beds",
+        "bathrooms": 1,
+        "description": "Kamar tipe Cottage untuk keluarga dengan 2 kasur Queen, balkon belakang pribadi menghadap dek BBQ outdoor, dan penghangat ruangan.",
+        "amenities": ["2 Queen Beds", "Balkon Belakang", "Area BBQ Deck Access", "Hot Shower"],
+        "images": [
+          "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=1200&q=80"
+        ]
+      }
+    ]
   },
   {
     "id": "v-crown-summit",
-    "name": "Villa Crown Summit",
-    "tagline": "Rooftop Sky Lounge dengan Pemandangan Lampu Kota Pasuruan",
+    "name": "Penginapan Crown Summit",
+    "tagline": "Kamar Panorama Sky Lounge dengan Pemandangan Lampu Kota Pasuruan",
     "category": "Luxury",
-    "priceWeekday": 2800000,
-    "priceWeekend": 3700000,
     "rating": 4.92,
     "reviewsCount": 29,
-    "capacity": 22,
-    "bedrooms": 5,
-    "bathrooms": 5,
-    "location": "Lali Jiwo Peak, Tretes",
-    "hasPool": true,
-    "poolType": "Rooftop Infinity Pool",
+    "location": "Pangalengan Street, Tretes Peak",
     "amenities": [
-      "Rooftop Pool",
-      "Sky Lounge & Bar",
-      "City Lights View",
-      "Meja Biliar",
-      "Karaoke Premium",
-      "Wifi 150 Mbps",
-      "BBQ Rooftop",
-      "Water Heater",
-      "Ruang Rapat / Discussion",
-      "Garasi 6 Mobil"
+      "Rooftop Sky Lounge",
+      "Smart TV 65\"",
+      "Arena Biliar 8ft",
+      "Wifi 100 Mbps",
+      "Dapur Bersama",
+      "Garasi Luas"
     ],
     "images": [
-      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
     ],
-    "description": "Villa megah berlantai 3 dengan poin utama Rooftop Sky Lounge dan Infinity Pool di ketinggian. Menikmati pemandangan matahari terbit di pagi hari dan kilauan lampu kota Pasuruan-Surabaya di malam hari sembari menikmati hidangan BBQ bersama kerabat dekat."
+    "description": "Terletak di titik elevasi tinggi kawasan Tretes Peak. Menyajikan pemandangan city light kota Pasuruan di malam hari dengan kenyamanan sewa kamar kelas premium.",
+    "roomTypes": [
+      {
+        "id": "rt-crown-1",
+        "name": "Deluxe City View",
+        "priceWeekday": 400000,
+        "priceWeekend": 500000,
+        "capacity": 2,
+        "bedType": "1 King Bed",
+        "bathrooms": 1,
+        "description": "Kamar Deluxe dengan jendela kaca penuh menghadap gemerlap lampu kota di malam hari. Dilengkapi King Bed, Smart TV, dan pemanas air mandi.",
+        "amenities": ["City Light View", "King Bed", "Smart TV 55\"", "Hot Shower"],
+        "images": [
+          "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80"
+        ]
+      },
+      {
+        "id": "rt-crown-2",
+        "name": "Sky Suite Rooftop",
+        "priceWeekday": 750000,
+        "priceWeekend": 900000,
+        "capacity": 4,
+        "bedType": "2 King Beds",
+        "bathrooms": 1,
+        "description": "Kamar Suite eksklusif lantai atas dengan akses pintu langsung menuju Rooftop Sky Lounge. Pemandangan bintang & hawa dingin pegunungan yang menawan.",
+        "amenities": ["Akses Rooftop Lounge", "2 King Beds", "Bathtub", "Mini Bar"],
+        "images": [
+          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80"
+        ]
+      }
+    ]
   },
   {
-    "id": "v-welirang-stone",
-    "name": "Villa Welirang Stone House",
-    "tagline": "Desain Rustic Bold Masculine dengan Lapangan Terbuka & Kolam Renang",
+    "id": "v-rustic-pemberton",
+    "name": "Penginapan Rustic Pemberton",
+    "tagline": "Nuansa Klasik Kayu Jati Sejuk di Kawasan Asri Tretes",
     "category": "Classic",
-    "priceWeekday": 1500000,
-    "priceWeekend": 2100000,
-    "rating": 4.85,
-    "reviewsCount": 61,
-    "capacity": 20,
-    "bedrooms": 4,
-    "bathrooms": 3,
-    "location": "Prigen Indah, Tretes",
-    "hasPool": true,
-    "poolType": "Private Swimming Pool",
+    "rating": 4.82,
+    "reviewsCount": 40,
+    "location": "Pecalukan Atas, Tretes",
     "amenities": [
-      "Private Pool",
-      "Lapangan Rumput Luas",
-      "Gazebo BBQ",
-      "Karaoke System",
-      "Meja Pingpong",
-      "Dapur Basah & Kering",
-      "Wifi High Speed",
-      "Water Heater",
-      "Garasi 5 Mobil"
+      "Taman Asri",
+      "Wifi 50 Mbps",
+      "Area BBQ",
+      "Dapur Umum",
+      "Parkir Mobil"
     ],
     "images": [
-      "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80"
     ],
-    "description": "Didominasi oleh karakter batu alam gunung Welirang, kayu mahoni, dan besi hitam tebal. Villa ini menghadirkan suasana hangat, kokoh, dan berkelas. Sangat direkomendasikan bagi rombongan yang menyukai kegiatan outdoor di halaman rumput maupun santai di pinggir kolam."
-  },
-  {
-    "id": "v-peak-asri",
-    "name": "Villa Peak Asri Prigen",
-    "tagline": "Villa Minimalis Modern Nyaman & Budget Friendly",
-    "category": "Family",
-    "priceWeekday": 1200000,
-    "priceWeekend": 1700000,
-    "rating": 4.80,
-    "reviewsCount": 73,
-    "capacity": 15,
-    "bedrooms": 3,
-    "bathrooms": 2,
-    "location": "Jalan Wilis, Tretes",
-    "hasPool": true,
-    "poolType": "Private Plunge Pool",
-    "amenities": [
-      "Private Pool",
-      "Balkon View Gunung",
-      "BBQ Grill Set",
-      "Karaoke Bluetooth",
-      "Dapur Lengkap",
-      "Wifi Unlimited",
-      "Water Heater",
-      "Garasi 3 Mobil"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1512915922686-57c11dde9b6b?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "description": "Pilihan tepat untuk liburan keluarga atau rombongan sedang dengan budget terjangkau tanpa mengorbankan kualitas & kenyamanan. Villa bersih, rapi dengan nuansa kayu dan cat abu-abu gelap yang tenang."
-  },
-  {
-    "id": "v-titanium-view",
-    "name": "Villa Titanium Haven",
-    "tagline": "Arsitektur Ultra-Modern dengan Glass Wall & Private Jacuzzi Pool",
-    "category": "Luxury",
-    "priceWeekday": 3500000,
-    "priceWeekend": 4800000,
-    "rating": 4.99,
-    "reviewsCount": 23,
-    "capacity": 25,
-    "bedrooms": 5,
-    "bathrooms": 5,
-    "location": "Hilltop Heights, Tretes",
-    "hasPool": true,
-    "poolType": "Infinity Pool + Jacuzzi Spa",
-    "amenities": [
-      "Infinity Pool & Jacuzzi",
-      "Glass Wall 360 View",
-      "Home Theater Bose",
-      "Meja Biliar Slate Top",
-      "Wifi 250 Mbps",
-      "Chef Service (Optional)",
-      "BBQ Party Deck",
-      "AC & Heater System",
-      "Smart Home Automation",
-      "Garasi 6 Mobil"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600566753086-35f13ebc6746?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "description": "Puncak estetika arsitektur maskulin modern di Tretes. Menggabungkan dinding kaca tempered raksasa dengan pemandangan 360 derajat pegunungan, lantai marmer seram hitam, serta Jacuzzi pribadi terintegrasi dengan infinity pool."
-  },
-  {
-    "id": "v-shanti-retreat",
-    "name": "Villa Shanti Mountain Retreat",
-    "tagline": "Suasana Tenang Vintage Wood & Stone untuk Acara Gathering Khidmat",
-    "category": "Classic",
-    "priceWeekday": 1600000,
-    "priceWeekend": 2200000,
-    "rating": 4.87,
-    "reviewsCount": 45,
-    "capacity": 20,
-    "bedrooms": 4,
-    "bathrooms": 3,
-    "location": "Kawasan Surya, Tretes",
-    "hasPool": true,
-    "poolType": "Private Garden Pool",
-    "amenities": [
-      "Private Pool",
-      "Taman Tropis Pinus",
-      "Dapur Kayu Tradisional & Modren",
-      "Karaoke Set",
-      "Wifi High Speed",
-      "BBQ Area",
-      "Water Heater",
-      "Garasi 4 Mobil"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "description": "Mengusung konsep gaya villa peristirahatan Jawa-Modern berpintu kayu ukir tebal dan pilar batu candi. Cocok untuk Anda yang menginginkan ketenangan alami, suara gemericik air tawar pegunungan, dan angin sejuk Tretes."
+    "description": "Penginapan bergaya Rustic Klasik dengan dominasi sentuhan kayu ramah lingkungan. Pilihan hemat dan nyaman untuk liburan keluarga di kawasan sejuk Tretes.",
+    "roomTypes": [
+      {
+        "id": "rt-pemberton-1",
+        "name": "Classic Standard Room",
+        "priceWeekday": 250000,
+        "priceWeekend": 320000,
+        "capacity": 2,
+        "bedType": "1 Double Bed",
+        "bathrooms": 1,
+        "description": "Kamar bernuansa kayu hangat yang bersih dan rapi. Sangat ekonomis dengan fasilitas kamar mandi air hangat dan area teras depan.",
+        "amenities": ["Double Bed", "Shower Air Hangat", "Teras Depan", "Wifi"],
+        "images": [
+          "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1200&q=80"
+        ]
+      },
+      {
+        "id": "rt-pemberton-2",
+        "name": "Classic Family Suite",
+        "priceWeekday": 450000,
+        "priceWeekend": 580000,
+        "capacity": 4,
+        "bedType": "2 Double Beds",
+        "bathrooms": 1,
+        "description": "Kamar keluarga berarsitektur klasik kayu jati, menyediakan 2 tempat tidur double dan pemandangan langsung ke kebun bunga penginapan.",
+        "amenities": ["2 Double Beds", "View Kebun Bunga", "Water Heater", "TV Cable"],
+        "images": [
+          "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=1200&q=80"
+        ]
+      }
+    ]
   }
 ]
