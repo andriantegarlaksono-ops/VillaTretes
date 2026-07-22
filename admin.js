@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 3. IMAGE FILE UPLOAD & LIVE PREVIEW WITH VALIDATION
+  // 3. IMAGE FILE UPLOAD & LIVE PREVIEW WITH VALIDATION (MAIN FOTO)
   // ==========================================
   function syncMainImagesArrayFromTextarea() {
     const raw = formImages ? formImages.value : '';
@@ -328,8 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.removeMainImage = function(idx) {
     currentMainImages.splice(idx, 1);
-    
-    // Update textarea to remove plain url if present
     if (formImages) {
       formImages.value = currentMainImages.filter(img => !img.startsWith('data:')).join('\n');
     }
@@ -437,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 5. ROOM CARD EDITOR (HOURLY RATES & IMAGE UPLOAD)
+  // 5. ROOM CARD EDITOR (HOURLY RATES & LIVE IMAGE PREVIEW STATUS)
   // ==========================================
   function renderRoomTypeCard(room = {}) {
     const cardId = 'room-card-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
@@ -447,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const price3H = room.price3Hours || Math.round((room.priceWeekday || 350000) * 0.45);
     const price6H = room.price6Hours || Math.round((room.priceWeekday || 350000) * 0.70);
+    const initialImages = Array.isArray(room.images) ? room.images.join('\n') : '';
 
     card.innerHTML = `
       <div class="admin-room-header">
@@ -524,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
                placeholder="AC, Smart TV, Hot Shower, Balkon Private" value="${Array.isArray(room.amenities) ? room.amenities.join(', ') : ''}">
       </div>
 
-      <!-- ROOM IMAGE FILE UPLOAD & PREVIEW -->
+      <!-- ROOM IMAGE FILE UPLOAD & LIVE PREVIEW WITH VALIDATION STATUS -->
       <div class="filter-group">
         <label style="font-size: 0.8rem;"><i class="ri-image-line" style="color: var(--accent-gold);"></i> Foto Tipe Kamar (Upload JPG/PNG atau Paste URL)</label>
         <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
@@ -534,7 +533,19 @@ document.addEventListener('DOMContentLoaded', () => {
           </button>
         </div>
         <textarea class="calc-select room-images" style="height: 45px; font-size: 0.82rem; resize: vertical;" 
-                  placeholder="https://images.unsplash.com/photo-kamar-1&#10;https://images.unsplash.com/photo-kamar-2">${Array.isArray(room.images) ? room.images.join('\n') : ''}</textarea>
+                  placeholder="https://images.unsplash.com/photo-kamar-1&#10;https://images.unsplash.com/photo-kamar-2"
+                  oninput="updateRoomImagesPreview('${cardId}')">${initialImages}</textarea>
+
+        <!-- Live Preview Grid for Room Images -->
+        <div class="images-preview-container" style="margin-top: 0.5rem;">
+          <div style="font-size: 0.78rem; font-weight: 600; color: var(--accent-gold); display: flex; align-items: center; justify-content: space-between;">
+            <span><i class="ri-eye-line"></i> Pratinjau Foto Kamar (Live Status Test)</span>
+            <span class="room-images-count" style="font-weight: normal; color: var(--text-muted); font-size: 0.72rem;">0 foto</span>
+          </div>
+          <div class="room-images-preview-grid images-preview-grid">
+            <!-- Room Thumbnails rendered dynamically -->
+          </div>
+        </div>
       </div>
     `;
 
@@ -559,6 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loaded++;
             if (loaded === files.length) {
               roomImagesTextarea.value = existingUrls.join('\n');
+              updateRoomImagesPreview(cardId);
             }
           };
           reader.readAsDataURL(file);
@@ -566,7 +578,85 @@ document.addEventListener('DOMContentLoaded', () => {
         roomFileInput.value = '';
       });
     }
+
+    // Initial render of room images preview
+    updateRoomImagesPreview(cardId);
   }
+
+  // Room Image Preview Helper Function
+  window.updateRoomImagesPreview = function(cardId) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+
+    const textarea = card.querySelector('.room-images');
+    const previewGrid = card.querySelector('.room-images-preview-grid');
+    const countBadge = card.querySelector('.room-images-count');
+    if (!textarea || !previewGrid) return;
+
+    const raw = textarea.value;
+    const images = raw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+
+    if (countBadge) {
+      countBadge.textContent = `${images.length} foto`;
+    }
+
+    if (images.length === 0) {
+      previewGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; color: var(--text-muted); font-size: 0.78rem; padding: 0.35rem 0;">
+          Belum ada foto kamar yang di-upload / dimasukkan.
+        </div>
+      `;
+      return;
+    }
+
+    previewGrid.innerHTML = images.map((src, idx) => {
+      const isLocal = src.startsWith('data:');
+      const labelText = isLocal ? 'File JPG/PNG' : 'Link URL';
+
+      return `
+        <div class="preview-thumb-card" id="room-preview-card-${cardId}-${idx}">
+          <img src="${src}" class="preview-thumb-img" alt="Preview Foto Kamar ${idx+1}" 
+               onload="handleRoomImagePreviewLoad('${cardId}', ${idx}, true)" 
+               onerror="handleRoomImagePreviewLoad('${cardId}', ${idx}, false)">
+          <div class="preview-status-bar" id="room-status-bar-${cardId}-${idx}">
+            <span>${labelText}</span>
+            <span class="status-indicator">Testing...</span>
+          </div>
+          <button type="button" class="preview-delete-btn" onclick="removeRoomImage('${cardId}', ${idx})" title="Hapus Foto Kamar Ini">✕</button>
+        </div>
+      `;
+    }).join('');
+  };
+
+  window.handleRoomImagePreviewLoad = function(cardId, idx, isSuccess) {
+    const cardElem = document.getElementById(`room-preview-card-${cardId}-${idx}`);
+    const statusBar = document.getElementById(`room-status-bar-${cardId}-${idx}`);
+    if (!cardElem || !statusBar) return;
+
+    if (isSuccess) {
+      cardElem.classList.remove('status-error');
+      cardElem.classList.add('status-success');
+      statusBar.className = 'preview-status-bar success';
+      statusBar.querySelector('.status-indicator').textContent = '✅ Terbaca';
+    } else {
+      cardElem.classList.remove('status-success');
+      cardElem.classList.add('status-error');
+      statusBar.className = 'preview-status-bar error';
+      statusBar.querySelector('.status-indicator').textContent = '❌ Broken';
+    }
+  };
+
+  window.removeRoomImage = function(cardId, idx) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    const textarea = card.querySelector('.room-images');
+    if (!textarea) return;
+
+    let images = textarea.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+    images.splice(idx, 1);
+    textarea.value = images.join('\n');
+    updateRoomImagesPreview(cardId);
+  };
 
   window.removeRoomCard = function(cardId) {
     const card = document.getElementById(cardId);
