@@ -3,7 +3,7 @@
     "id": "v-grand-arjuno",
     "name": "Villa Invito",
     "tagline": "Penginapan Modern dengan Panoramic City Light Yang Apik",
-    "category": "Luxury",
+    "category": "Villa Kamaran",
     "rating": 4.95,
     "reviewsCount": 42,
     "location": "Pecalukan, Tretes - Prigen",
@@ -87,7 +87,7 @@
     "id": "v-black-diamond",
     "name": "Wisma Black Diamond",
     "tagline": "Eksklusif Industrial Modern dengan Private Lounge & Cinema Room",
-    "category": "Luxury",
+    "category": "Villa Karaoke",
     "rating": 4.98,
     "reviewsCount": 38,
     "location": "Semeru Street, Tretes Pusat",
@@ -110,6 +110,8 @@
       {
         "id": "rt-diamond-1",
         "name": "Standard Obsidian Room",
+        "price3Hours": 126000,
+        "price6Hours": 196000,
         "priceWeekday": 280000,
         "priceWeekend": 380000,
         "capacity": 2,
@@ -129,6 +131,8 @@
       {
         "id": "rt-diamond-2",
         "name": "Deluxe Lounge Room",
+        "price3Hours": 247500,
+        "price6Hours": 385000,
         "priceWeekday": 550000,
         "priceWeekend": 700000,
         "capacity": 3,
@@ -139,7 +143,7 @@
           "Soundbar Bluetooth",
           "Workdesk Premium",
           "Water Heater",
-          "Smart TV 50\""
+          "Smart TV 50"
         ],
         "images": [
           "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80"
@@ -148,11 +152,13 @@
       {
         "id": "rt-diamond-3",
         "name": "VIP Suite Obsidian",
+        "price3Hours": 382500,
+        "price6Hours": 595000,
         "priceWeekday": 850000,
         "priceWeekend": 1100000,
         "capacity": 5,
         "bedType": "2 King Beds",
-        "bathrooms": 2,
+        "bathrooms": 1,
         "description": "Kamar VIP mewah dengan area santai privat, Bathtub kamar mandi dalam, akses langsung ke Cinema Room, serta layanan teko kopi otomatis.",
         "amenities": [
           "Private Bathtub",
