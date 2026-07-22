@@ -13,6 +13,22 @@
   
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Password Security Check -->
+  <script>
+    (function() {
+      const sessionAuth = sessionStorage.getItem('admin_authenticated');
+      if (sessionAuth !== 'true') {
+        const pw = prompt("Masukkan Password Admin:");
+        if (pw === "1234") {
+          sessionStorage.setItem('admin_authenticated', 'true');
+        } else {
+          alert("Password salah atau akses dibatalkan!");
+          window.location.href = "index.html";
+        }
+      }
+    })();
+  </script>
 </head>
 <body style="background-color: var(--bg-primary);">
 
