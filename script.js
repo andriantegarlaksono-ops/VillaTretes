@@ -35,15 +35,50 @@ document.addEventListener('DOMContentLoaded', () => {
   const filterKaraoke = document.getElementById('filterKaraoke');
   const filterMountainView = document.getElementById('filterMountainView');
   
-  // Tabs
-  const tabBtns = document.querySelectorAll('.tab-btn');
+  // Tabs container
+  const categoryTabsContainer = document.querySelector('.category-tabs');
 
   // Modal Elements
   const detailModal = document.getElementById('detailModal');
   const modalCloseBtn = document.getElementById('modalCloseBtn');
   const modalDynamicContent = document.getElementById('modalDynamicContent');
 
-  // Site Header Scroll listener
+  // Sync Categories from LocalStorage if added via Admin
+  function syncDynamicCategories() {
+    const saved = localStorage.getItem('admin_categories_list');
+    if (!saved) return;
+    try {
+      const cats = JSON.parse(saved);
+      if (!Array.isArray(cats) || cats.length === 0) return;
+
+      // Update categorySelect dropdown
+      if (categorySelect) {
+        categorySelect.innerHTML = `<option value="ALL">Semua Kategori</option>` + 
+          cats.map(c => `<option value="${c}">${c}</option>`).join('');
+      }
+
+      // Update Tabs
+      if (categoryTabsContainer) {
+        categoryTabsContainer.innerHTML = `<button class="tab-btn active" data-category="ALL"><i class="ri-grid-fill"></i> Semua Penginapan</button>` +
+          cats.map(c => `<button class="tab-btn" data-category="${c}"><i class="ri-building-line"></i> ${c}</button>`).join('');
+
+        // Re-attach listener
+        categoryTabsContainer.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            categoryTabsContainer.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.currentCategory = btn.getAttribute('data-category');
+            if (categorySelect) categorySelect.value = state.currentCategory;
+            applyFiltersAndRender();
+          });
+        });
+      }
+    } catch (e) {
+      console.error('Error syncing categories in script.js:', e);
+    }
+  }
+
+  // Header Scroll
   const siteHeader = document.getElementById('siteHeader');
   window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {
@@ -53,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Mobile Hamburger Menu Handler
+  // Mobile Hamburger Menu
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
   const navMenu = document.getElementById('navMenu');
 
@@ -66,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Close menu when clicking nav link
     const navLinksList = navMenu.querySelectorAll('a');
     navLinksList.forEach(link => {
       link.addEventListener('click', () => {
@@ -77,8 +111,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Fetch / Load Villas Data
+  // Load Data
   async function loadData() {
+    syncDynamicCategories();
+
+    // Check localStorage first
+    const savedData = localStorage.getItem('admin_villas_dataset');
+    if (savedData) {
+      try {
+        state.villas = JSON.parse(savedData);
+        state.filteredVillas = [...state.villas];
+        applyFiltersAndRender();
+        return;
+      } catch (e) {
+        console.error('Error parsing localStorage dataset in script.js:', e);
+      }
+    }
+
     try {
       if (window.VILLAS_DATA && Array.isArray(window.VILLAS_DATA) && window.VILLAS_DATA.length > 0) {
         state.villas = window.VILLAS_DATA;
@@ -104,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Format Currency (IDR)
   function formatIDR(number) {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -113,40 +161,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }).format(number);
   }
 
-  // Helper to get minimum room price
   function getMinRoomPrice(v) {
     if (!v.roomTypes || v.roomTypes.length === 0) return 0;
     return Math.min(...v.roomTypes.map(r => r.priceWeekday));
   }
 
-  // Helper to get maximum room price
   function getMaxRoomPrice(v) {
     if (!v.roomTypes || v.roomTypes.length === 0) return 0;
     return Math.max(...v.roomTypes.map(r => r.priceWeekday));
   }
 
-  // Apply Filters & Sorting
   function applyFiltersAndRender() {
     let result = [...state.villas];
 
-    // 1. Search Query Filter
     if (state.searchQuery.trim() !== '') {
       const query = state.searchQuery.toLowerCase();
       result = result.filter(v => 
         v.name.toLowerCase().includes(query) ||
         v.location.toLowerCase().includes(query) ||
-        v.tagline.toLowerCase().includes(query) ||
-        v.description.toLowerCase().includes(query) ||
+        (v.tagline && v.tagline.toLowerCase().includes(query)) ||
+        (v.description && v.description.toLowerCase().includes(query)) ||
         (v.roomTypes && v.roomTypes.some(r => r.name.toLowerCase().includes(query) || r.description.toLowerCase().includes(query)))
       );
     }
 
-    // 2. Category Filter
     if (state.currentCategory !== 'ALL') {
       result = result.filter(v => v.category === state.currentCategory);
     }
 
-    // 3. Amenity Toggles Filter
     if (state.amenityFilters.billiard) {
       result = result.filter(v => v.amenities.some(a => a.toLowerCase().includes('biliar')));
     }
@@ -157,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
       result = result.filter(v => v.amenities.some(a => a.toLowerCase().includes('view gunung')));
     }
 
-    // 4. Sorting Logic
     if (state.sortOption === 'PRICE_LOW') {
       result.sort((a, b) => getMinRoomPrice(a) - getMinRoomPrice(b));
     } else if (state.sortOption === 'PRICE_HIGH') {
@@ -168,17 +209,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     state.filteredVillas = result;
 
-    // Update Counts & Badge
     resultsCount.textContent = result.length;
     let badgeText = state.currentCategory === 'ALL' ? 'Menampilkan Semua' : `Kategori: ${state.currentCategory}`;
     if (state.searchQuery) badgeText += ` | Cari: "${state.searchQuery}"`;
     activeFilterBadge.textContent = badgeText;
 
-    // Render Grid
     renderGrid(result);
   }
 
-  // Render Villa Cards Grid
   function renderGrid(villas) {
     if (villas.length === 0) {
       villaGrid.style.display = 'none';
@@ -194,195 +232,208 @@ document.addEventListener('DOMContentLoaded', () => {
       const minPrice = getMinRoomPrice(v);
       const roomTypesCount = v.roomTypes ? v.roomTypes.length : 0;
       
-      let categoryBadgeClass = 'badge-gold';
-      if (v.category === 'Modern') categoryBadgeClass = 'badge-cyan';
-      if (v.category === 'Classic') categoryBadgeClass = 'badge-emerald';
-
       return `
-        <article class="villa-card">
+        <div class="villa-card">
           <div class="card-media">
-            <img src="${v.images[0]}" alt="${v.name}" loading="lazy">
-            <span class="badge ${categoryBadgeClass} card-category-badge">${v.category}</span>
-            
-            <button class="card-bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
-                    onclick="event.stopPropagation(); toggleBookmark('${v.id}')" 
-                    title="Simpan Favorit">
+            <img src="${v.images && v.images[0] ? v.images[0] : 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80'}" alt="${v.name}" loading="lazy">
+            <span class="card-badge badge-gold">${v.category}</span>
+            <button class="card-bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark(event, '${v.id}')" title="Simpan Bookmark">
               <i class="${isBookmarked ? 'ri-heart-fill' : 'ri-heart-line'}"></i>
             </button>
-
-            <div class="card-rating-overlay">
-              <i class="ri-star-fill"></i>
-              <span>${v.rating.toFixed(2)} (${v.reviewsCount})</span>
-            </div>
           </div>
 
           <div class="card-body">
-            <div class="card-location">
-              <i class="ri-map-pin-2-fill"></i> ${v.location}
+            <div class="card-rating">
+              <i class="ri-star-fill"></i>
+              <span>${v.rating} (${v.reviewsCount || 10} ulasan)</span>
             </div>
 
             <h3 class="card-title">${v.name}</h3>
-            <p class="card-tagline">${v.tagline}</p>
+            <div class="card-location">
+              <i class="ri-map-pin-line"></i> ${v.location}
+            </div>
+
+            <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1rem;">${v.tagline || v.description.substring(0, 75) + '...'}</p>
 
             <div class="card-specs">
               <div class="spec-item">
-                <i class="ri-hotel-bed-fill"></i>
-                <span>${roomTypesCount} Tipe Kamar</span>
+                <i class="ri-hotel-bed-line" style="color: var(--accent-gold);"></i> ${roomTypesCount} Tipe Kamar
               </div>
               <div class="spec-item">
-                <i class="ri-checkbox-circle-fill"></i>
-                <span>${v.amenities.length} Fasilitas</span>
+                <i class="ri-temp-cold-line" style="color: var(--accent-cyan);"></i> Hawa Sejuk
               </div>
+            </div>
+
+            <div class="card-amenities-tags">
+              ${v.amenities.slice(0, 3).map(a => `<span class="amenity-tag">${a}</span>`).join('')}
+              ${v.amenities.length > 3 ? `<span class="amenity-tag">+${v.amenities.length - 3} lagi</span>` : ''}
             </div>
 
             <div class="card-footer">
-              <div class="price-box">
-                <span class="price-label">Mulai Dari</span>
-                <span class="price-amount">${formatIDR(minPrice)} <small>/ malam</small></span>
+              <div class="card-price">
+                <span class="price-label">Mulai dari</span>
+                <div class="price-amount">${formatIDR(minPrice)} <span style="font-size: 0.75rem; font-weight: normal; color: var(--text-muted);">/malam</span></div>
               </div>
 
               <button class="btn-card-action" onclick="openVillaModal('${v.id}')">
-                <span>Lihat Kamar</span>
-                <i class="ri-arrow-right-line"></i>
+                Detail & Sewa <i class="ri-arrow-right-line"></i>
               </button>
             </div>
           </div>
-        </article>
+        </div>
       `;
     }).join('');
   }
 
-  // Toggle Bookmark in LocalStorage
-  window.toggleBookmark = function(villaId) {
-    if (state.bookmarks.includes(villaId)) {
-      state.bookmarks = state.bookmarks.filter(id => id !== villaId);
+  // Bookmark Toggle
+  window.toggleBookmark = function(e, id) {
+    e.stopPropagation();
+    const index = state.bookmarks.indexOf(id);
+    if (index === -1) {
+      state.bookmarks.push(id);
     } else {
-      state.bookmarks.push(villaId);
+      state.bookmarks.splice(index, 1);
     }
     localStorage.setItem('villa_bookmarks', JSON.stringify(state.bookmarks));
     applyFiltersAndRender();
   };
 
-  // Open Interactive Room & Villa Detail Modal
-  window.openVillaModal = function(villaId) {
-    const villa = state.villas.find(v => v.id === villaId);
-    if (!villa) return;
-    state.activeVilla = villa;
+  // Open Detail Modal
+  window.openVillaModal = function(id) {
+    const v = state.villas.find(item => item.id === id);
+    if (!v) return;
+
+    state.activeVilla = v;
     state.activeRoomIndex = 0;
 
     renderModalContent();
-
     detailModal.classList.add('active');
     document.body.style.overflow = 'hidden';
   };
 
-  // Render Content inside Modal for Active Room
+  // Render Modal Content
   function renderModalContent() {
+    if (!state.activeVilla) return;
     const villa = state.activeVilla;
-    if (!villa || !villa.roomTypes || villa.roomTypes.length === 0) return;
+    const currentRoom = villa.roomTypes[state.activeRoomIndex] || villa.roomTypes[0] || {};
+    const roomImages = (currentRoom.images && currentRoom.images.length > 0) ? currentRoom.images : (villa.images || []);
 
-    const currentRoom = villa.roomTypes[state.activeRoomIndex] || villa.roomTypes[0];
-    const roomImages = (currentRoom.images && currentRoom.images.length > 0) ? currentRoom.images : villa.images;
+    const price3H = currentRoom.price3Hours || Math.round((currentRoom.priceWeekday || 350000) * 0.45);
+    const price6H = currentRoom.price6Hours || Math.round((currentRoom.priceWeekday || 350000) * 0.70);
 
     modalDynamicContent.innerHTML = `
-      <!-- Property Overview Header -->
-      <div style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem;">
-        <span class="badge badge-gold" style="margin-bottom: 0.5rem;">${villa.category} Penginapan</span>
-        <h2 class="modal-title" style="margin-top: 0.25rem;">${villa.name}</h2>
-        <div class="modal-tagline">${villa.tagline}</div>
-        <div style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">
-          <i class="ri-map-pin-2-fill" style="color: var(--accent-gold);"></i> ${villa.location}
+      <!-- Gallery Header -->
+      <div class="modal-gallery">
+        <div class="modal-gallery-main">
+          <img id="modalMainImg" src="${roomImages[0] || 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80'}" alt="${villa.name}">
         </div>
+        ${roomImages.length > 1 ? `
+          <div class="modal-thumbnails">
+            ${roomImages.map((img, idx) => `
+              <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="switchModalGallery('${img}', this)">
+                <img src="${img}" alt="Thumbnail ${idx+1}">
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
       </div>
 
-      <!-- ROOM TYPES SELECTOR TABS -->
-      <div class="room-selector-wrapper">
-        <label style="font-size: 0.85rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; display: block; margin-bottom: 0.5rem;">
-          <i class="ri-hotel-bed-line"></i> Pilih Tipe Kamar:
-        </label>
-        <div class="room-tabs-list">
-          ${villa.roomTypes.map((rt, idx) => `
-            <button class="room-tab-btn ${idx === state.activeRoomIndex ? 'active' : ''}" onclick="switchRoomTab(${idx})">
-              <span>${rt.name}</span>
-              <small style="display:block; font-size: 0.75rem; opacity: 0.85;">${formatIDR(rt.priceWeekday)}/malam</small>
-            </button>
-          `).join('')}
-        </div>
-      </div>
-
-      <!-- GALLERY FOR ACTIVE ROOM -->
-      <div class="modal-gallery-main" style="margin-top: 1.25rem;">
-        <img id="modalMainImg" src="${roomImages[0]}" alt="${currentRoom.name}">
-      </div>
-
-      ${roomImages.length > 1 ? `
-        <div class="modal-thumbnails">
-          ${roomImages.map((img, idx) => `
-            <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="switchModalGallery('${img}', this)">
-              <img src="${img}" alt="Gallery ${idx}">
-            </div>
-          `).join('')}
-        </div>
-      ` : ''}
-
-      <div class="modal-body-content" style="margin-top: 1.5rem;">
-        <div class="modal-main-info">
-          <!-- Room Title & Specs -->
-          <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-bold);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
-              <h3 style="font-family: var(--font-heading); font-size: 1.4rem; color: var(--accent-gold);">${currentRoom.name}</h3>
-              <span class="badge badge-cyan">${currentRoom.bedType || 'Kasur Premium'}</span>
-            </div>
-
-            <div class="modal-specs-grid">
-              <div class="modal-spec-card">
-                <i class="ri-group-fill"></i>
-                <strong>${currentRoom.capacity} Orang</strong>
-                <span>Kapasitas Kamar</span>
-              </div>
-              <div class="modal-spec-card">
-                <i class="ri-hotel-bed-fill"></i>
-                <strong>${currentRoom.bedType || '1 King Bed'}</strong>
-                <span>Tipe Tempat Tidur</span>
-              </div>
-              <div class="modal-spec-card">
-                <i class="ri-drop-fill"></i>
-                <strong>${currentRoom.bathrooms || 1} Kamar</strong>
-                <span>Kamar Mandi Dalam</span>
-              </div>
-              <div class="modal-spec-card">
-                <i class="ri-money-dollar-circle-line"></i>
-                <strong>${formatIDR(currentRoom.priceWeekday)}</strong>
-                <span>Tarif Weekday</span>
-              </div>
-            </div>
+      <div class="modal-body-content">
+        <!-- Main Details -->
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
+            <span class="badge badge-gold">${villa.category}</span>
+            <span class="badge badge-cyan"><i class="ri-map-pin-line"></i> ${villa.location}</span>
           </div>
 
-          <!-- Room Specific Description -->
-          <div style="margin-top: 1.25rem;">
-            <h4 style="font-family: var(--font-heading); margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--text-primary);">
-              <i class="ri-file-text-line" style="color: var(--accent-gold);"></i> Deskripsi Tipe Kamar Ini
+          <h2 class="modal-title">${villa.name}</h2>
+          <p class="modal-subtitle">${villa.tagline || villa.description}</p>
+
+          <!-- ROOM TYPES SELECTION TABS -->
+          <div style="margin: 1.5rem 0;">
+            <h4 style="font-family: var(--font-heading); font-size: 1rem; color: var(--accent-gold); margin-bottom: 0.75rem;">
+              <i class="ri-hotel-bed-fill"></i> Pilih Tipe Kamar (${villa.roomTypes.length} Pilihan):
             </h4>
-            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; background: var(--bg-card); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
-              ${currentRoom.description || 'Kamar nyaman dengan pemandangan sejuk pegunungan Tretes.'}
-            </p>
-          </div>
 
-          <!-- Room Amenities -->
-          <div style="margin-top: 1.25rem;">
-            <h4 style="font-family: var(--font-heading); margin-bottom: 0.75rem; font-size: 1.1rem;">Fasilitas Dalam Kamar</h4>
-            <div class="modal-amenities-list">
-              ${(currentRoom.amenities || villa.amenities).map(item => `
-                <div class="amenity-pill">
-                  <i class="ri-checkbox-circle-fill"></i>
-                  <span>${item}</span>
+            <div class="modal-room-tabs">
+              ${villa.roomTypes.map((rt, idx) => `
+                <div class="modal-room-tab-item ${idx === state.activeRoomIndex ? 'active' : ''}" onclick="switchRoomTab(${idx})">
+                  <div class="room-tab-title">${rt.name}</div>
+                  <div class="room-tab-price">mulai ${formatIDR(rt.priceWeekday)}</div>
                 </div>
               `).join('')}
             </div>
           </div>
+
+          <!-- SELECTED ROOM SPECS -->
+          <div style="background: var(--bg-card); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-bold); margin-bottom: 1.5rem;">
+            <h3 style="font-size: 1.1rem; color: var(--accent-gold); margin-bottom: 0.75rem; font-family: var(--font-heading);">
+              Fasilitas & Rincian: ${currentRoom.name}
+            </h3>
+
+            <div class="modal-specs-grid" style="margin-bottom: 1rem;">
+              <div class="modal-spec-card">
+                <i class="ri-hotel-bed-line"></i>
+                <div>
+                  <div class="spec-label">Kasur</div>
+                  <div class="spec-value">${currentRoom.bedType || '1 King Bed'}</div>
+                </div>
+              </div>
+
+              <div class="modal-spec-card">
+                <i class="ri-user-line"></i>
+                <div>
+                  <div class="spec-label">Kapasitas</div>
+                  <div class="spec-value">${currentRoom.capacity || 2} Orang</div>
+                </div>
+              </div>
+
+              <div class="modal-spec-card">
+                <i class="ri-time-line"></i>
+                <div>
+                  <div class="spec-label">Tarif 3 Jam</div>
+                  <div class="spec-value" style="color: var(--accent-gold);">${formatIDR(price3H)}</div>
+                </div>
+              </div>
+
+              <div class="modal-spec-card">
+                <i class="ri-time-line"></i>
+                <div>
+                  <div class="spec-label">Tarif 6 Jam</div>
+                  <div class="spec-value" style="color: var(--accent-gold);">${formatIDR(price6H)}</div>
+                </div>
+              </div>
+            </div>
+
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem;">
+              ${currentRoom.description || 'Kamar nyaman di kawasan sejuk Tretes.'}
+            </p>
+
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+              Fasilitas Dalam Kamar Ini:
+            </div>
+            <div class="modal-amenities-list">
+              ${(currentRoom.amenities || ['AC', 'Hot Shower', 'Smart TV']).map(a => `
+                <div class="modal-amenity-item">
+                  <i class="ri-checkbox-circle-fill"></i>
+                  <span>${a}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- ALL VILLA AMENITIES -->
+          <div style="margin-bottom: 1.5rem;">
+            <h4 style="font-family: var(--font-heading); font-size: 1rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+              Fasilitas Umum Penginapan:
+            </h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              ${villa.amenities.map(a => `<span class="amenity-tag" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">${a}</span>`).join('')}
+            </div>
+          </div>
         </div>
 
-        <!-- Interactive Price & Booking Calculator -->
+        <!-- Interactive Price & Booking Calculator (Supports Hourly & Nightly Rates) -->
         <div class="modal-side-panel">
           <div class="calc-title">
             <i class="ri-calculator-line" style="color: var(--accent-gold);"></i> Hitung Sewa Kamar Ini
@@ -397,33 +448,45 @@ document.addEventListener('DOMContentLoaded', () => {
             </select>
           </div>
 
+          <!-- DURATION PACKAGE SELECTOR (3 JAM, 6 JAM, MENGINAP) -->
           <div class="calc-input-group">
-            <label for="modalDayType">Tipe Hari</label>
-            <select id="modalDayType" class="calc-select" onchange="updateModalPrice()">
-              <option value="weekday" data-price="${currentRoom.priceWeekday}">Weekday (Hari Kerja) - ${formatIDR(currentRoom.priceWeekday)}/malam</option>
-              <option value="weekend" data-price="${currentRoom.priceWeekend}">Weekend (Sabtu/Minggu) - ${formatIDR(currentRoom.priceWeekend)}/malam</option>
+            <label for="modalDurationPackage">Pilihan Durasi Sewa</label>
+            <select id="modalDurationPackage" class="calc-select" onchange="updateModalPrice()">
+              <option value="3H" data-price="${price3H}">Sewa Short Time (3 Jam) - ${formatIDR(price3H)}</option>
+              <option value="6H" data-price="${price6H}">Sewa Short Time (6 Jam) - ${formatIDR(price6H)}</option>
+              <option value="NIGHT" selected>Menginap / Per Malam</option>
             </select>
           </div>
 
-          <div class="calc-input-group">
-            <label for="modalNights">Durasi Menginap (Malam)</label>
-            <select id="modalNights" class="calc-select" onchange="updateModalPrice()">
-              <option value="1">1 Malam</option>
-              <option value="2">2 Malam</option>
-              <option value="3">3 Malam</option>
-              <option value="4">4 Malam</option>
-              <option value="5">5+ Malam</option>
-            </select>
+          <div id="nightlyOptionsBox">
+            <div class="calc-input-group">
+              <label for="modalDayType">Tipe Hari Menginap</label>
+              <select id="modalDayType" class="calc-select" onchange="updateModalPrice()">
+                <option value="weekday" data-price="${currentRoom.priceWeekday}">Weekday (Hari Kerja) - ${formatIDR(currentRoom.priceWeekday)}/malam</option>
+                <option value="weekend" data-price="${currentRoom.priceWeekend}">Weekend (Sabtu/Minggu) - ${formatIDR(currentRoom.priceWeekend)}/malam</option>
+              </select>
+            </div>
+
+            <div class="calc-input-group">
+              <label for="modalNights">Jumlah Malam</label>
+              <select id="modalNights" class="calc-select" onchange="updateModalPrice()">
+                <option value="1">1 Malam</option>
+                <option value="2">2 Malam</option>
+                <option value="3">3 Malam</option>
+                <option value="4">4 Malam</option>
+                <option value="5">5+ Malam</option>
+              </select>
+            </div>
           </div>
 
           <div class="calc-price-summary">
             <div class="summary-row">
-              <span>Tarif Per Malam:</span>
+              <span>Tarif Pilihan:</span>
               <strong id="modalRatePerNight">${formatIDR(currentRoom.priceWeekday)}</strong>
             </div>
             <div class="summary-row">
               <span>Durasi:</span>
-              <strong id="modalNightCount">1 Malam</strong>
+              <strong id="modalNightCount">1 Malam (Menginap)</strong>
             </div>
             <div class="summary-row total">
               <span>Total Estimasi:</span>
@@ -442,21 +505,20 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `;
+
+    updateModalPrice();
   }
 
-  // Switch Room Tab
   window.switchRoomTab = function(roomIdx) {
     state.activeRoomIndex = roomIdx;
     renderModalContent();
   };
 
-  // Switch Room Select Dropdown in Calculator
   window.switchRoomSelect = function(roomIdxStr) {
     state.activeRoomIndex = parseInt(roomIdxStr, 10);
     renderModalContent();
   };
 
-  // Switch Gallery Thumbnail Image
   window.switchModalGallery = function(imgSrc, thumbElem) {
     const mainImg = document.getElementById('modalMainImg');
     if (mainImg) mainImg.src = imgSrc;
@@ -465,47 +527,81 @@ document.addEventListener('DOMContentLoaded', () => {
     if (thumbElem) thumbElem.classList.add('active');
   };
 
-  // Update Price Breakdown dynamically inside Modal
+  // Dynamic Price Calculator
   window.updateModalPrice = function() {
+    const packageSelect = document.getElementById('modalDurationPackage');
     const dayTypeSelect = document.getElementById('modalDayType');
     const nightsSelect = document.getElementById('modalNights');
+    const nightlyBox = document.getElementById('nightlyOptionsBox');
+    
     const rateElem = document.getElementById('modalRatePerNight');
-    const nightCountElem = document.getElementById('modalNightCount');
+    const countElem = document.getElementById('modalNightCount');
     const totalElem = document.getElementById('modalTotalPrice');
 
-    if (!dayTypeSelect || !nightsSelect || !state.activeVilla) return;
+    if (!packageSelect || !state.activeVilla) return;
 
-    const selectedOption = dayTypeSelect.options[dayTypeSelect.selectedIndex];
-    const pricePerNight = parseInt(selectedOption.getAttribute('data-price'), 10);
-    const nights = parseInt(nightsSelect.value, 10);
-    const totalPrice = pricePerNight * nights;
+    const currentRoom = state.activeVilla.roomTypes[state.activeRoomIndex] || state.activeVilla.roomTypes[0] || {};
+    const pkg = packageSelect.value;
 
-    rateElem.textContent = formatIDR(pricePerNight);
-    nightCountElem.textContent = `${nights} Malam`;
-    totalElem.textContent = formatIDR(totalPrice);
+    if (pkg === '3H' || pkg === '6H') {
+      if (nightlyBox) nightlyBox.style.display = 'none';
+      
+      const opt = packageSelect.options[packageSelect.selectedIndex];
+      const price = parseInt(opt.getAttribute('data-price'), 10) || (pkg === '3H' ? 150000 : 250000);
+      const labelText = pkg === '3H' ? '3 Jam (Short Time)' : '6 Jam (Short Time)';
+
+      rateElem.textContent = formatIDR(price);
+      countElem.textContent = labelText;
+      totalElem.textContent = formatIDR(price);
+    } else {
+      if (nightlyBox) nightlyBox.style.display = 'block';
+
+      const dayOpt = dayTypeSelect.options[dayTypeSelect.selectedIndex];
+      const pricePerNight = parseInt(dayOpt.getAttribute('data-price'), 10) || currentRoom.priceWeekday;
+      const nights = parseInt(nightsSelect.value, 10) || 1;
+      const totalPrice = pricePerNight * nights;
+
+      rateElem.textContent = `${formatIDR(pricePerNight)}/malam`;
+      countElem.textContent = `${nights} Malam (Menginap)`;
+      totalElem.textContent = formatIDR(totalPrice);
+    }
   };
 
-  // Submit Pre-filled WhatsApp Booking Message with Selected Room Type
+  // WhatsApp Booking
   window.submitWaBooking = function() {
     if (!state.activeVilla) return;
     const currentRoom = state.activeVilla.roomTypes[state.activeRoomIndex] || state.activeVilla.roomTypes[0];
 
+    const packageSelect = document.getElementById('modalDurationPackage');
     const dayTypeSelect = document.getElementById('modalDayType');
     const nightsSelect = document.getElementById('modalNights');
     const totalElem = document.getElementById('modalTotalPrice');
 
-    const dayTypeText = dayTypeSelect.options[dayTypeSelect.selectedIndex].text;
-    const nightsText = `${nightsSelect.value} Malam`;
+    const pkg = packageSelect.value;
+    let durationText = '';
+    let dayTypeText = '';
+
+    if (pkg === '3H') {
+      durationText = '3 Jam (Short Time)';
+      dayTypeText = 'Fleksibel';
+    } else if (pkg === '6H') {
+      durationText = '6 Jam (Short Time)';
+      dayTypeText = 'Fleksibel';
+    } else {
+      durationText = `${nightsSelect.value} Malam (Menginap)`;
+      dayTypeText = dayTypeSelect.options[dayTypeSelect.selectedIndex].text;
+    }
+
     const totalCost = totalElem.textContent;
 
     const message = `Halo Admin VillaTretes, saya berminat untuk sewa kamar berikut:\n\n` +
       `🏨 *${state.activeVilla.name}*\n` +
       `🛏️ *Tipe Kamar: ${currentRoom.name}*\n` +
       `📍 Lokasi: ${state.activeVilla.location}\n` +
-      `📅 Tipe Hari: ${dayTypeText}\n` +
-      `⏳ Durasi: ${nightsText}\n` +
+      `📅 Tipe Sewa/Hari: ${dayTypeText}\n` +
+      `⏳ Durasi: ${durationText}\n` +
       `💰 Estimasi Biaya: ${totalCost}\n\n` +
-      `Mohon konfirmasi ketersediaan kamar & prosedur DP nya. Terima kasih!`;
+      `Mohon konfirmasi ketersediaan kamar & prosedur reservasinya. Terima kasih!`;
 
     const encodedMsg = encodeURIComponent(message);
     const waUrl = `https://wa.me/6285536581733?text=${encodedMsg}`;
@@ -513,7 +609,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.open(waUrl, '_blank');
   };
 
-  // Close Modal Handler
   function closeModal() {
     detailModal.classList.remove('active');
     document.body.style.overflow = '';
@@ -527,37 +622,29 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape' && detailModal.classList.contains('active')) closeModal();
   });
 
-  // Event Listeners for Filters
+  // Filter Event Listeners
   searchInput.addEventListener('input', (e) => {
     state.searchQuery = e.target.value;
     applyFiltersAndRender();
   });
 
-  categorySelect.addEventListener('change', (e) => {
-    state.currentCategory = e.target.value;
-    tabBtns.forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-category') === state.currentCategory);
+  if (categorySelect) {
+    categorySelect.addEventListener('change', (e) => {
+      state.currentCategory = e.target.value;
+      if (categoryTabsContainer) {
+        categoryTabsContainer.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-category') === state.currentCategory);
+        });
+      }
+      applyFiltersAndRender();
     });
-    applyFiltersAndRender();
-  });
+  }
 
   sortSelect.addEventListener('change', (e) => {
     state.sortOption = e.target.value;
     applyFiltersAndRender();
   });
 
-  // Category Tab Pills Click
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      state.currentCategory = btn.getAttribute('data-category');
-      categorySelect.value = state.currentCategory;
-      applyFiltersAndRender();
-    });
-  });
-
-  // Checkbox Amenities Listeners
   if (filterBilliard) {
     filterBilliard.addEventListener('change', (e) => {
       state.amenityFilters.billiard = e.target.checked;
@@ -577,7 +664,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Reset Filters Function
   window.resetFilters = function() {
     state.searchQuery = '';
     state.currentCategory = 'ALL';
@@ -585,34 +671,21 @@ document.addEventListener('DOMContentLoaded', () => {
     state.amenityFilters = { billiard: false, karaoke: false, mountainView: false };
 
     searchInput.value = '';
-    categorySelect.value = 'ALL';
+    if (categorySelect) categorySelect.value = 'ALL';
     sortSelect.value = 'DEFAULT';
 
     if (filterBilliard) filterBilliard.checked = false;
     if (filterKaraoke) filterKaraoke.checked = false;
     if (filterMountainView) filterMountainView.checked = false;
 
-    tabBtns.forEach(b => b.classList.remove('active'));
-    tabBtns[0].classList.add('active');
+    if (categoryTabsContainer) {
+      const tabBtns = categoryTabsContainer.querySelectorAll('.tab-btn');
+      tabBtns.forEach(b => b.classList.remove('active'));
+      if (tabBtns[0]) tabBtns[0].classList.add('active');
+    }
 
     applyFiltersAndRender();
   };
 
-  btnResetFilter.addEventListener('click', resetFilters);
-
-  // FAQ Accordion Listeners
-  const faqItems = document.querySelectorAll('.faq-item');
-  faqItems.forEach(item => {
-    const header = item.querySelector('.faq-header');
-    header.addEventListener('click', () => {
-      const isActive = item.classList.contains('active');
-      faqItems.forEach(i => i.classList.remove('active'));
-      if (!isActive) {
-        item.classList.add('active');
-      }
-    });
-  });
-
-  // Initialize App Data
   loadData();
 });

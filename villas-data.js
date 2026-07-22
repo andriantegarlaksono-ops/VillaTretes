@@ -1,28 +1,33 @@
 /**
- * KATALOG VILLA TRETES - VILLAS DATASET
+ * KATALOG VILLA TRETES - VILLAS & ROOMS DATASET
+ * Directly usable via script tag to prevent CORS file:// protocol restrictions when double-clicking index.html
  */
 
 window.VILLAS_DATA = [
   {
     "id": "v-grand-arjuno",
-    "name": "Villa Invito",
-    "tagline": "Penginapan Modern dengan Panoramic City Light Yang Apik",
+    "name": "Penginapan Grand Arjuno",
+    "tagline": "Penginapan Modern dengan Panoramic View Gunung Arjuno & Balkon Private",
     "category": "Luxury",
     "rating": 4.95,
     "reviewsCount": 42,
     "location": "Pecalukan, Tretes - Prigen",
     "amenities": [
-      "View City Light",
-      "Smart TV",
+      "View Gunung Arjuno",
+      "Meja Biliar",
+      "Karaoke & Smart TV",
       "Wifi 100 Mbps",
-      "Water Heater"
+      "BBQ Grill Stand",
+      "Dapur Bersama Standard Chef",
+      "Water Heater",
+      "Garasi 5 Mobil"
     ],
     "images": [
       "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
     ],
-    "description": "Penginapan Villa Invito menyajikan konsep arsitektur kontemporer bernuansa sejuk dan elegan di kawasan utama Tretes. Menyediakan pilihan sewa kamar eksklusif mulai dari tipe Superior hingga Executive Suite dengan panorama Gunung Arjuno, ruang lounge bersama, serta fasilitas biliar profesional.",
+    "description": "Penginapan Grand Arjuno menyajikan konsep arsitektur kontemporer bernuansa sejuk dan elegan di kawasan utama Tretes. Menyediakan pilihan sewa kamar eksklusif mulai dari tipe Superior hingga Executive Suite dengan panorama Gunung Arjuno, ruang lounge bersama, serta fasilitas biliar profesional.",
     "roomTypes": [
       {
         "id": "rt-arjuno-1",
@@ -33,10 +38,7 @@ window.VILLAS_DATA = [
         "bedType": "1 King Bed / 2 Twin Beds",
         "bathrooms": 1,
         "description": "Kamar Superior dengan balkon pribadi menghadap pemandangan langsung Gunung Arjuno. Dilengkapi AC/hawa sejuk alami, Smart TV 43 inch, meja kerja, dan kamar mandi dalam bershower air hangat.",
-        "amenities": [
-          "Balkon View Gunung",
-          "Smart TV 43"
-        ],
+        "amenities": ["Balkon View Gunung", "Smart TV 43\"", "Shower Air Hangat", "Wifi Cepat", "Teko Listrik Kopi/Teh"],
         "images": [
           "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80",
           "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80"
@@ -51,32 +53,25 @@ window.VILLAS_DATA = [
         "bedType": "2 King Beds",
         "bathrooms": 1,
         "description": "Kamar Deluxe ekstra luas dirancang khusus untuk rombongan keluarga atau teman. Memiliki 2 tempat tidur ukuran King, area lounge santai, Smart TV 50 inch, dan lemari pakaian besar.",
-        "amenities": [
-          "2 Tempat Tidur King",
-          "Sofa Lounge",
-          "Smart TV 50"
-        ],
+        "amenities": ["2 Tempat Tidur King", "Sofa Lounge", "Smart TV 50\"", "Water Heater", "Mini Fridge"],
         "images": [
           "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80",
           "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80"
         ]
       },
       {
-        "id": "rt-1784740100928-49",
-        "name": "Standart",
-        "priceWeekday": 100000,
-        "priceWeekend": 150000,
-        "capacity": 2,
-        "bedType": "1 King Bed",
-        "bathrooms": 1,
-        "description": "Kamar nyaman dengan pemandangan pegunungan.",
-        "amenities": [
-          "AC",
-          "Smart TV",
-          "Hot Shower"
-        ],
+        "id": "rt-arjuno-3",
+        "name": "Executive Suite Arjuno",
+        "priceWeekday": 950000,
+        "priceWeekend": 1200000,
+        "capacity": 6,
+        "bedType": "2 Super King Beds + Sofa Bed",
+        "bathrooms": 2,
+        "description": "Tipe kamar kasta tertinggi di Penginapan Grand Arjuno. Dilengkapi teras rooftop pribadi, 2 kamar mandi dalam dengan Bathtub, ruang tamu privat, dan perlengkapan mandi premium.",
+        "amenities": ["Private Rooftop Terrace", "Bathtub & Jacuzzi", "Living Room", "Smart TV 65\"", "Coffee Machine"],
         "images": [
-          "https://ibb.co.com/fYqzkw6v"
+          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80"
         ]
       }
     ]
@@ -114,12 +109,7 @@ window.VILLAS_DATA = [
         "bedType": "1 Queen Bed",
         "bathrooms": 1,
         "description": "Kamar bergaya minimalis industrial modern dengan tempat tidur Queen yang sangat nyaman, pencahayaan warm ambient, Smart TV, dan akses mudah ke lounge utama.",
-        "amenities": [
-          "Warm Ambient Lighting",
-          "Smart TV",
-          "Shower Hot Water",
-          "Wifi 200 Mbps"
-        ],
+        "amenities": ["Warm Ambient Lighting", "Smart TV", "Shower Hot Water", "Wifi 200 Mbps"],
         "images": [
           "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80"
         ]
@@ -133,12 +123,7 @@ window.VILLAS_DATA = [
         "bedType": "1 King Bed + 1 Single Bed",
         "bathrooms": 1,
         "description": "Kamar Deluxe berukuran sedang dengan kombinasi kasur King & Single. Dilengkapi fasilitas kerja modern, soundbar audio, dan pemandangan area taman inner-court.",
-        "amenities": [
-          "Soundbar Bluetooth",
-          "Workdesk Premium",
-          "Water Heater",
-          "Smart TV 50\""
-        ],
+        "amenities": ["Soundbar Bluetooth", "Workdesk Premium", "Water Heater", "Smart TV 50\""],
         "images": [
           "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80"
         ]
@@ -152,12 +137,7 @@ window.VILLAS_DATA = [
         "bedType": "2 King Beds",
         "bathrooms": 2,
         "description": "Kamar VIP mewah dengan area santai privat, Bathtub kamar mandi dalam, akses langsung ke Cinema Room, serta layanan teko kopi otomatis.",
-        "amenities": [
-          "Private Bathtub",
-          "Akses Cinema Room",
-          "Nespresso Coffee Maker",
-          "2 Bathroom"
-        ],
+        "amenities": ["Private Bathtub", "Akses Cinema Room", "Nespresso Coffee Maker", "2 Bathroom"],
         "images": [
           "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80"
         ]
@@ -197,12 +177,7 @@ window.VILLAS_DATA = [
         "bedType": "1 Queen Bed",
         "bathrooms": 1,
         "description": "Kamar Superior bernuansa kayu pinus alami dengan jendela besar menghadap pepohonan rindang. Sangat sejuk dan cocok untuk istirahat tenang pasangan atau solo traveler.",
-        "amenities": [
-          "Pine Forest View",
-          "Kamar Mandi Shower",
-          "Hot Water",
-          "Kopi & Teh"
-        ],
+        "amenities": ["Pine Forest View", "Kamar Mandi Shower", "Hot Water", "Kopi & Teh"],
         "images": [
           "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1200&q=80"
         ]
@@ -216,12 +191,7 @@ window.VILLAS_DATA = [
         "bedType": "2 Queen Beds",
         "bathrooms": 1,
         "description": "Kamar tipe Cottage untuk keluarga dengan 2 kasur Queen, balkon belakang pribadi menghadap dek BBQ outdoor, dan penghangat ruangan.",
-        "amenities": [
-          "2 Queen Beds",
-          "Balkon Belakang",
-          "Area BBQ Deck Access",
-          "Hot Shower"
-        ],
+        "amenities": ["2 Queen Beds", "Balkon Belakang", "Area BBQ Deck Access", "Hot Shower"],
         "images": [
           "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=1200&q=80"
         ]
@@ -258,12 +228,7 @@ window.VILLAS_DATA = [
         "bedType": "1 King Bed",
         "bathrooms": 1,
         "description": "Kamar Deluxe dengan jendela kaca penuh menghadap gemerlap lampu kota di malam hari. Dilengkapi King Bed, Smart TV, dan pemanas air mandi.",
-        "amenities": [
-          "City Light View",
-          "King Bed",
-          "Smart TV 55\"",
-          "Hot Shower"
-        ],
+        "amenities": ["City Light View", "King Bed", "Smart TV 55\"", "Hot Shower"],
         "images": [
           "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80"
         ]
@@ -277,12 +242,7 @@ window.VILLAS_DATA = [
         "bedType": "2 King Beds",
         "bathrooms": 1,
         "description": "Kamar Suite eksklusif lantai atas dengan akses pintu langsung menuju Rooftop Sky Lounge. Pemandangan bintang & hawa dingin pegunungan yang menawan.",
-        "amenities": [
-          "Akses Rooftop Lounge",
-          "2 King Beds",
-          "Bathtub",
-          "Mini Bar"
-        ],
+        "amenities": ["Akses Rooftop Lounge", "2 King Beds", "Bathtub", "Mini Bar"],
         "images": [
           "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80"
         ]
@@ -318,12 +278,7 @@ window.VILLAS_DATA = [
         "bedType": "1 Double Bed",
         "bathrooms": 1,
         "description": "Kamar bernuansa kayu hangat yang bersih dan rapi. Sangat ekonomis dengan fasilitas kamar mandi air hangat dan area teras depan.",
-        "amenities": [
-          "Double Bed",
-          "Shower Air Hangat",
-          "Teras Depan",
-          "Wifi"
-        ],
+        "amenities": ["Double Bed", "Shower Air Hangat", "Teras Depan", "Wifi"],
         "images": [
           "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1200&q=80"
         ]
@@ -337,12 +292,7 @@ window.VILLAS_DATA = [
         "bedType": "2 Double Beds",
         "bathrooms": 1,
         "description": "Kamar keluarga berarsitektur klasik kayu jati, menyediakan 2 tempat tidur double dan pemandangan langsung ke kebun bunga penginapan.",
-        "amenities": [
-          "2 Double Beds",
-          "View Kebun Bunga",
-          "Water Heater",
-          "TV Cable"
-        ],
+        "amenities": ["2 Double Beds", "View Kebun Bunga", "Water Heater", "TV Cable"],
         "images": [
           "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=1200&q=80"
         ]

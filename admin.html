@@ -65,6 +65,9 @@
         </div>
 
         <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button id="btnManageCategories" class="btn-card-action" style="border-color: var(--accent-gold); color: var(--accent-gold);">
+            <i class="ri-price-tag-3-line"></i> Kelola Kategori
+          </button>
           <button id="btnAddVilla" class="btn-header-wa">
             <i class="ri-add-line"></i> Tambah Penginapan Baru
           </button>
@@ -135,9 +138,7 @@
               <div class="filter-group">
                 <label for="formCategory">Kategori *</label>
                 <select id="formCategory" class="select-control" required>
-                  <option value="Luxury">Luxury</option>
-                  <option value="Modern">Modern</option>
-                  <option value="Classic">Classic</option>
+                  <!-- Rendered dynamically by admin.js -->
                 </select>
               </div>
             </div>
@@ -159,14 +160,62 @@
               </div>
             </div>
 
+            <!-- INTERACTIVE MANUAL FACILITY EDITOR -->
             <div class="filter-group" style="margin-bottom: 1rem;">
-              <label for="formAmenities">Fasilitas Utama Penginapan (Pisahkan dengan Koma)</label>
-              <input type="text" id="formAmenities" class="input-control" style="padding-left: 1rem;" placeholder="View Gunung, Meja Biliar, Karaoke, Wifi 100 Mbps, BBQ Area">
+              <label><i class="ri-checkbox-multiple-line" style="color: var(--accent-gold);"></i> Kelola Fasilitas Utama Penginapan (Kendali Manual Admin)</label>
+              <div class="amenities-editor-box">
+                <div class="amenity-chips-wrapper" id="formAmenitiesChips">
+                  <!-- Chips items rendered dynamically -->
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                  <input type="text" id="newAmenityInput" class="input-control" style="padding-left: 0.75rem; height: 38px; font-size: 0.85rem;" placeholder="Ketik nama fasilitas baru (misal: Kolam Renang Private)...">
+                  <button type="button" id="btnAddAmenityChip" class="btn-card-action" style="white-space: nowrap; font-size: 0.82rem; border-color: var(--accent-gold); color: var(--accent-gold);">
+                    <i class="ri-add-line"></i> + Tambah
+                  </button>
+                </div>
+
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">Preset Pilihan Cepat:</div>
+                <div class="amenity-presets-wrapper">
+                  <button type="button" class="preset-chip-btn" onclick="addAmenityPreset('View Gunung')">+ View Gunung</button>
+                  <button type="button" class="preset-chip-btn" onclick="addAmenityPreset('Meja Biliar')">+ Meja Biliar</button>
+                  <button type="button" class="preset-chip-btn" onclick="addAmenityPreset('Karaoke')">+ Karaoke</button>
+                  <button type="button" class="preset-chip-btn" onclick="addAmenityPreset('Wifi 100 Mbps')">+ Wifi 100 Mbps</button>
+                  <button type="button" class="preset-chip-btn" onclick="addAmenityPreset('BBQ Area')">+ BBQ Area</button>
+                  <button type="button" class="preset-chip-btn" onclick="addAmenityPreset('Kolam Renang Private')">+ Kolam Renang Private</button>
+                  <button type="button" class="preset-chip-btn" onclick="addAmenityPreset('Garasi Luas')">+ Garasi Luas</button>
+                  <button type="button" class="preset-chip-btn" onclick="addAmenityPreset('Dapur Full Set')">+ Dapur Full Set</button>
+                </div>
+              </div>
+              <input type="hidden" id="formAmenities">
             </div>
 
+            <!-- FILE UPLOAD & URL FOTO UTAMA PENGINAPAN WITH LIVE PREVIEW -->
             <div class="filter-group" style="margin-bottom: 1rem;">
-              <label for="formImages">URL Foto Utama Penginapan (1 URL per baris)</label>
-              <textarea id="formImages" class="calc-select" style="height: 70px; resize: vertical;" placeholder="https://images.unsplash.com/photo-xxx&#10;https://images.unsplash.com/photo-yyy"></textarea>
+              <label for="formImages"><i class="ri-image-line" style="color: var(--accent-gold);"></i> Foto Utama Penginapan (Upload Berkas JPG/PNG atau Link URL)</label>
+              
+              <div class="file-upload-btn-wrapper">
+                <input type="file" id="formMainImageFile" accept="image/*" multiple style="display: none;">
+                <button type="button" class="btn-upload-file" onclick="document.getElementById('formMainImageFile').click()">
+                  <i class="ri-upload-cloud-2-line"></i> Upload Berkas Foto (JPG/PNG) dari Komputer/HP
+                </button>
+              </div>
+
+              <div style="margin-top: 0.75rem;">
+                <span style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.25rem;">Atau Paste URL Link Foto (1 URL per baris):</span>
+                <textarea id="formImages" class="calc-select" style="height: 60px; resize: vertical;" placeholder="https://images.unsplash.com/photo-xxx&#10;https://images.unsplash.com/photo-yyy"></textarea>
+              </div>
+
+              <!-- Live Preview Grid -->
+              <div class="images-preview-container">
+                <div style="font-size: 0.8rem; font-weight: 600; color: var(--accent-gold); display: flex; align-items: center; justify-content: space-between;">
+                  <span><i class="ri-eye-line"></i> Pratinjau Foto Utama (Live Preview & Status Test)</span>
+                  <span id="mainImagesCount" style="font-weight: normal; color: var(--text-muted); font-size: 0.75rem;">0 foto</span>
+                </div>
+                <div id="formMainImagesPreview" class="images-preview-grid">
+                  <!-- Thumbnails injected dynamically -->
+                </div>
+              </div>
             </div>
 
             <div class="filter-group">
@@ -253,8 +302,47 @@
     </div>
   </div>
 
+  <!-- CATEGORY MANAGEMENT MODAL -->
+  <div class="modal-overlay" id="categoryModal">
+    <div class="modal-container" style="max-width: 600px;">
+      <button class="modal-close-btn" id="categoryModalCloseBtn">
+        <i class="ri-close-line"></i>
+      </button>
+
+      <div style="padding: 2rem;">
+        <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 0.5rem; color: var(--accent-gold);">
+          <i class="ri-price-tag-3-fill"></i> Kelola Kategori Penginapan
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.5rem;">
+          Tambah kategori baru, ubah nama kategori yang ada, atau hapus kategori. Kategori ini akan otomatis tersinkronisasi di filter katalog.
+        </p>
+
+        <!-- Add New Category Box -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+          <input type="text" id="newCategoryInput" class="input-control" placeholder="Tulis nama kategori baru (misal: Family Resort)..." style="padding-left: 0.85rem;">
+          <button id="btnAddNewCategory" class="btn-header-wa" style="white-space: nowrap;">
+            <i class="ri-add-line"></i> Tambah Kategori
+          </button>
+        </div>
+
+        <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.75rem;">
+          Daftar Kategori Aktif:
+        </div>
+
+        <div id="adminCategoryListContainer">
+          <!-- Dynamic Category List Rows rendered via admin.js -->
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" class="btn-card-action" onclick="closeCategoryModal()">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Load Data Files -->
   <script src="villas-data.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>
+
