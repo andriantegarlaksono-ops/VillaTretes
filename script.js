@@ -2,6 +2,12 @@
  * KATALOG VILLA TRETES - APPLICATION INTERACTIVE LOGIC (SEWA KAMARAN)
  */
 
+// Configuration dinamis kontak WhatsApp admin resmi
+const CONFIG = {
+  waPhone: '6285536581733',
+  waTextHeader: 'Halo Admin VillaTretes, saya ingin tanya informasi sewa villa'
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   // Global State
   const state = {
@@ -13,11 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
     amenityFilters: {
       billiard: false,
       karaoke: false,
-      mountainView: false
+      mountainView: false,
+      bookmarks: false
     },
     bookmarks: JSON.parse(localStorage.getItem('villa_bookmarks') || '[]'),
     activeVilla: null,
-    activeRoomIndex: 0
+    activeRoomIndex: 0,
+    checkInDate: '',
+    checkOutDate: ''
   };
 
   // DOM Element References
@@ -78,6 +87,118 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Dynamic WhatsApp URL syncing from CONFIG
+  function syncWhatsAppLinks() {
+    const waUrlHeader = `https://wa.me/${CONFIG.waPhone}?text=${encodeURIComponent(CONFIG.waTextHeader)}`;
+    const headerCtaLink = document.querySelector('.btn-header-wa');
+    if (headerCtaLink) headerCtaLink.href = waUrlHeader;
+
+    const floatingWaBtn = document.querySelector('.floating-wa-btn');
+    if (floatingWaBtn) floatingWaBtn.href = waUrlHeader;
+
+    const footerWa = document.getElementById('footerWaContact');
+    if (footerWa) {
+      const formattedPhone = `+${CONFIG.waPhone.substring(0, 2)} ${CONFIG.waPhone.substring(2, 5)}-${CONFIG.waPhone.substring(5, 9)}-${CONFIG.waPhone.substring(9)}`;
+      const footerWaSpan = footerWa.querySelector('span');
+      if (footerWaSpan) footerWaSpan.textContent = `WhatsApp Admin: ${formattedPhone}`;
+    }
+  }
+
+  // Mapping kata kunci fasilitas ke kelas ikon Remixicon
+  function getAmenityIcon(name) {
+    const text = name.toLowerCase();
+    if (text.includes('biliar') || text.includes('billiard')) return 'ri-gamepad-line';
+    if (text.includes('karaoke')) return 'ri-mic-line';
+    if (text.includes('wifi')) return 'ri-wifi-line';
+    if (text.includes('gunung') || text.includes('view gunung') || text.includes('mountain')) return 'ri-landscape-line';
+    if (text.includes('pool') || text.includes('kolam') || text.includes('renang')) return 'ri-water-flash-line';
+    if (text.includes('dapur') || text.includes('kitchen')) return 'ri-restaurant-line';
+    if (text.includes('heaters') || text.includes('air hangat') || text.includes('hot water') || text.includes('heater') || text.includes('shower hot') || text.includes('hot shower')) return 'ri-temp-hot-line';
+    if (text.includes('garasi') || text.includes('parkir') || text.includes('car') || text.includes('mobil')) return 'ri-car-fill';
+    if (text.includes('tv') || text.includes('smart tv') || text.includes('cinema')) return 'ri-tv-2-line';
+    if (text.includes('bbq') || text.includes('grill')) return 'ri-fire-line';
+    if (text.includes('rooftop') || text.includes('sky')) return 'ri-building-line';
+    if (text.includes('bed') || text.includes('kasur') || text.includes('kamar')) return 'ri-hotel-bed-line';
+    if (text.includes('ac')) return 'ri-windy-line';
+    if (text.includes('bathtub') || text.includes('jacuzzi')) return 'ri-hand-sanitizer-line';
+    if (text.includes('aman') || text.includes('keamanan') || text.includes('security')) return 'ri-shield-user-line';
+    if (text.includes('balkon') || text.includes('balcony')) return 'ri-door-open-line';
+    return 'ri-checkbox-circle-fill';
+  }
+
+  // Mock ulasan pelanggan premium untuk social proof
+  function getMockReviews(villaId, villaName) {
+    const defaultReviews = [
+      {
+        name: "Budi Santoso",
+        date: "Juni 2026",
+        rating: "5.0",
+        avatar: "B",
+        text: `Kamar di ${villaName} sangat nyaman dan bersih. Udara dingin khas Tretes terasa segar sekali di balkon. Fasilitas hiburan lengkap.`
+      },
+      {
+        name: "Rina Wijaya",
+        date: "Juli 2026",
+        rating: "4.8",
+        avatar: "R",
+        text: "Kamar mandi bersih dengan air hangat yang berfungsi normal. Adminnya ramah dan fast respon saat di-chat via WA."
+      }
+    ];
+
+    const specificReviews = {
+      'v-grand-arjuno': [
+        {
+          name: "Hendry Prasetyo",
+          date: "Juli 2026",
+          rating: "5.0",
+          avatar: "H",
+          text: "Pemandangan Gunung Arjuno dari balkon kamar Superior benar-benar menakjubkan di pagi hari! Kamar sangat luas dan bersih."
+        },
+        {
+          name: "Siti Rahma",
+          date: "Juni 2026",
+          rating: "4.9",
+          avatar: "S",
+          text: "Menginap di tipe Family Room bersama anak-anak sangat memuaskan. Area dapurnya bersih dan perlengkapannya lengkap."
+        }
+      ],
+      'v-black-diamond': [
+        {
+          name: "Kevin Sanjaya",
+          date: "Mei 2026",
+          rating: "5.0",
+          avatar: "K",
+          text: "Desain industrial hitamnya sangat elegan dan modern. Fasilitas cinema room & biliar 9ft benar-benar luar biasa untuk kumpul teman."
+        },
+        {
+          name: "Amalia Putri",
+          date: "Juni 2026",
+          rating: "5.0",
+          avatar: "A",
+          text: "VIP Suite sangat mewah dengan bathtub privat. Suasana malam hari di dekat fire pit outdoor sangat hangat dan nyaman."
+        }
+      ],
+      'v-pinus-horizon': [
+        {
+          name: "Dimas Anggara",
+          date: "Juli 2026",
+          rating: "4.8",
+          avatar: "D",
+          text: "Atmosfer pepohonan pinus di sekitar penginapan sangat asri. Balkon belakang menghadap langsung ke taman pinus yang tenang."
+        },
+        {
+          name: "Fitri Handayani",
+          date: "Juni 2026",
+          rating: "4.9",
+          avatar: "F",
+          text: "Sangat dekat dengan Air Terjun Kakek Bodo. Halaman rumputnya luas sekali, anak-anak senang berlarian di sini."
+        }
+      ]
+    };
+
+    return specificReviews[villaId] || defaultReviews;
+  }
+
   // Header Scroll
   const siteHeader = document.getElementById('siteHeader');
   window.addEventListener('scroll', () => {
@@ -114,6 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load Data
   async function loadData() {
     syncDynamicCategories();
+    syncWhatsAppLinks();
 
     // Check localStorage first
     const savedData = localStorage.getItem('admin_villas_dataset');
@@ -198,6 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (state.amenityFilters.mountainView) {
       result = result.filter(v => v.amenities.some(a => a.toLowerCase().includes('view gunung')));
     }
+    if (state.amenityFilters.bookmarks) {
+      result = result.filter(v => state.bookmarks.includes(v.id));
+    }
 
     if (state.sortOption === 'PRICE_LOW') {
       result.sort((a, b) => getMinRoomPrice(a) - getMinRoomPrice(b));
@@ -212,6 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resultsCount.textContent = result.length;
     let badgeText = state.currentCategory === 'ALL' ? 'Menampilkan Semua' : `Kategori: ${state.currentCategory}`;
     if (state.searchQuery) badgeText += ` | Cari: "${state.searchQuery}"`;
+    if (state.amenityFilters.bookmarks) badgeText += ` | Hanya Favorit`;
     activeFilterBadge.textContent = badgeText;
 
     renderGrid(result);
@@ -265,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="card-amenities-tags">
-              ${v.amenities.slice(0, 3).map(a => `<span class="amenity-tag">${a}</span>`).join('')}
+              ${v.amenities.slice(0, 3).map(a => `<span class="amenity-tag"><i class="${getAmenityIcon(a)}"></i> ${a}</span>`).join('')}
               ${v.amenities.length > 3 ? `<span class="amenity-tag">+${v.amenities.length - 3} lagi</span>` : ''}
             </div>
 
@@ -305,6 +431,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     state.activeVilla = v;
     state.activeRoomIndex = 0;
+
+    const today = new Date();
+    state.checkInDate = today.toISOString().split('T')[0];
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    state.checkOutDate = tomorrow.toISOString().split('T')[0];
 
     renderModalContent();
     detailModal.classList.add('active');
@@ -415,7 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="modal-amenities-list">
               ${(currentRoom.amenities || ['AC', 'Hot Shower', 'Smart TV']).map(a => `
                 <div class="modal-amenity-item">
-                  <i class="ri-checkbox-circle-fill"></i>
+                  <i class="${getAmenityIcon(a)}"></i>
                   <span>${a}</span>
                 </div>
               `).join('')}
@@ -428,7 +560,34 @@ document.addEventListener('DOMContentLoaded', () => {
               Fasilitas Umum Penginapan:
             </h4>
             <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-              ${villa.amenities.map(a => `<span class="amenity-tag" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">${a}</span>`).join('')}
+              ${villa.amenities.map(a => `<span class="amenity-tag" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;"><i class="${getAmenityIcon(a)}"></i> ${a}</span>`).join('')}
+            </div>
+          </div>
+
+          <!-- MOCK CUSTOMER REVIEWS -->
+          <div style="margin-top: 2rem; border-top: 1px solid var(--border-subtle); padding-top: 1.5rem;">
+            <h4 style="font-family: var(--font-heading); font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="ri-message-3-line" style="color: var(--accent-gold);"></i> Ulasan Pengunjung (${villa.reviewsCount || 10} Ulasan)
+            </h4>
+            
+            <div class="modal-reviews-list">
+              ${getMockReviews(villa.id, villa.name).map(r => `
+                <div class="review-item">
+                  <div class="review-header">
+                    <div class="review-user">
+                      <div class="user-avatar">${r.avatar}</div>
+                      <div>
+                        <div class="user-name">${r.name}</div>
+                        <div class="review-date">${r.date}</div>
+                      </div>
+                    </div>
+                    <div class="review-rating">
+                      <i class="ri-star-fill"></i> ${r.rating}
+                    </div>
+                  </div>
+                  <p class="review-text">${r.text}</p>
+                </div>
+              `).join('')}
             </div>
           </div>
         </div>
@@ -460,22 +619,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <div id="nightlyOptionsBox">
             <div class="calc-input-group">
-              <label for="modalDayType">Tipe Hari Menginap</label>
-              <select id="modalDayType" class="calc-select" onchange="updateModalPrice()">
-                <option value="weekday" data-price="${currentRoom.priceWeekday}">Weekday (Hari Kerja) - ${formatIDR(currentRoom.priceWeekday)}/malam</option>
-                <option value="weekend" data-price="${currentRoom.priceWeekend}">Weekend (Sabtu/Minggu) - ${formatIDR(currentRoom.priceWeekend)}/malam</option>
-              </select>
+              <label for="modalCheckInDate">Tanggal Check-In</label>
+              <input type="date" id="modalCheckInDate" class="calc-select" value="${state.checkInDate}" onchange="updateModalPrice()">
             </div>
 
             <div class="calc-input-group">
-              <label for="modalNights">Jumlah Malam</label>
-              <select id="modalNights" class="calc-select" onchange="updateModalPrice()">
-                <option value="1">1 Malam</option>
-                <option value="2">2 Malam</option>
-                <option value="3">3 Malam</option>
-                <option value="4">4 Malam</option>
-                <option value="5">5+ Malam</option>
-              </select>
+              <label for="modalCheckOutDate">Tanggal Check-Out</label>
+              <input type="date" id="modalCheckOutDate" class="calc-select" value="${state.checkOutDate}" onchange="updateModalPrice()">
             </div>
           </div>
 
@@ -530,8 +680,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Dynamic Price Calculator
   window.updateModalPrice = function() {
     const packageSelect = document.getElementById('modalDurationPackage');
-    const dayTypeSelect = document.getElementById('modalDayType');
-    const nightsSelect = document.getElementById('modalNights');
+    const checkInInput = document.getElementById('modalCheckInDate');
+    const checkOutInput = document.getElementById('modalCheckOutDate');
     const nightlyBox = document.getElementById('nightlyOptionsBox');
     
     const rateElem = document.getElementById('modalRatePerNight');
@@ -555,14 +705,43 @@ document.addEventListener('DOMContentLoaded', () => {
       totalElem.textContent = formatIDR(price);
     } else {
       if (nightlyBox) nightlyBox.style.display = 'block';
+      if (!checkInInput || !checkOutInput) return;
 
-      const dayOpt = dayTypeSelect.options[dayTypeSelect.selectedIndex];
-      const pricePerNight = parseInt(dayOpt.getAttribute('data-price'), 10) || currentRoom.priceWeekday;
-      const nights = parseInt(nightsSelect.value, 10) || 1;
-      const totalPrice = pricePerNight * nights;
+      const checkInVal = checkInInput.value;
+      const checkOutVal = checkOutInput.value;
+      state.checkInDate = checkInVal;
+      state.checkOutDate = checkOutVal;
 
-      rateElem.textContent = `${formatIDR(pricePerNight)}/malam`;
-      countElem.textContent = `${nights} Malam (Menginap)`;
+      const d1 = new Date(checkInVal);
+      const d2 = new Date(checkOutVal);
+
+      if (d2 <= d1) {
+        const nextDay = new Date(d1);
+        nextDay.setDate(nextDay.getDate() + 1);
+        const nextDayStr = nextDay.toISOString().split('T')[0];
+        checkOutInput.value = nextDayStr;
+        state.checkOutDate = nextDayStr;
+        updateModalPrice();
+        return;
+      }
+
+      let totalNights = 0;
+      let totalPrice = 0;
+      let tempDate = new Date(d1);
+
+      while (tempDate < d2) {
+        const dayOfWeek = tempDate.getDay(); // 0 is Sunday, 5 is Friday, 6 is Saturday
+        const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0);
+        const priceForNight = isWeekend ? currentRoom.priceWeekend : currentRoom.priceWeekday;
+        totalPrice += priceForNight;
+        totalNights++;
+        tempDate.setDate(tempDate.getDate() + 1);
+      }
+
+      const avgRate = Math.round(totalPrice / totalNights);
+
+      rateElem.textContent = `Rata-rata ${formatIDR(avgRate)}/malam`;
+      countElem.textContent = `${totalNights} Malam (Menginap)`;
       totalElem.textContent = formatIDR(totalPrice);
     }
   };
@@ -573,23 +752,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentRoom = state.activeVilla.roomTypes[state.activeRoomIndex] || state.activeVilla.roomTypes[0];
 
     const packageSelect = document.getElementById('modalDurationPackage');
-    const dayTypeSelect = document.getElementById('modalDayType');
-    const nightsSelect = document.getElementById('modalNights');
+    const checkInInput = document.getElementById('modalCheckInDate');
+    const checkOutInput = document.getElementById('modalCheckOutDate');
     const totalElem = document.getElementById('modalTotalPrice');
 
     const pkg = packageSelect.value;
     let durationText = '';
-    let dayTypeText = '';
+    let dateRangeText = '';
 
     if (pkg === '3H') {
       durationText = '3 Jam (Short Time)';
-      dayTypeText = 'Fleksibel';
+      dateRangeText = 'Hari ini / Fleksibel';
     } else if (pkg === '6H') {
       durationText = '6 Jam (Short Time)';
-      dayTypeText = 'Fleksibel';
+      dateRangeText = 'Hari ini / Fleksibel';
     } else {
-      durationText = `${nightsSelect.value} Malam (Menginap)`;
-      dayTypeText = dayTypeSelect.options[dayTypeSelect.selectedIndex].text;
+      if (!checkInInput || !checkOutInput) return;
+      const checkInVal = checkInInput.value;
+      const checkOutVal = checkOutInput.value;
+      const d1 = new Date(checkInVal);
+      const d2 = new Date(checkOutVal);
+      const nights = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+      
+      const formatDateIndo = (dateStr) => {
+        const parts = dateStr.split('-');
+        if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        return dateStr;
+      };
+      
+      durationText = `${nights} Malam`;
+      dateRangeText = `${formatDateIndo(checkInVal)} s/d ${formatDateIndo(checkOutVal)}`;
     }
 
     const totalCost = totalElem.textContent;
@@ -598,13 +790,13 @@ document.addEventListener('DOMContentLoaded', () => {
       `🏨 *${state.activeVilla.name}*\n` +
       `🛏️ *Tipe Kamar: ${currentRoom.name}*\n` +
       `📍 Lokasi: ${state.activeVilla.location}\n` +
-      `📅 Tipe Sewa/Hari: ${dayTypeText}\n` +
+      `📅 Rentang Tanggal: ${dateRangeText}\n` +
       `⏳ Durasi: ${durationText}\n` +
       `💰 Estimasi Biaya: ${totalCost}\n\n` +
       `Mohon konfirmasi ketersediaan kamar & prosedur reservasinya. Terima kasih!`;
 
     const encodedMsg = encodeURIComponent(message);
-    const waUrl = `https://wa.me/6285536581733?text=${encodedMsg}`;
+    const waUrl = `https://wa.me/${CONFIG.waPhone}?text=${encodedMsg}`;
 
     window.open(waUrl, '_blank');
   };
@@ -663,12 +855,19 @@ document.addEventListener('DOMContentLoaded', () => {
       applyFiltersAndRender();
     });
   }
+  const filterBookmarks = document.getElementById('filterBookmarks');
+  if (filterBookmarks) {
+    filterBookmarks.addEventListener('change', (e) => {
+      state.amenityFilters.bookmarks = e.target.checked;
+      applyFiltersAndRender();
+    });
+  }
 
   window.resetFilters = function() {
     state.searchQuery = '';
     state.currentCategory = 'ALL';
     state.sortOption = 'DEFAULT';
-    state.amenityFilters = { billiard: false, karaoke: false, mountainView: false };
+    state.amenityFilters = { billiard: false, karaoke: false, mountainView: false, bookmarks: false };
 
     searchInput.value = '';
     if (categorySelect) categorySelect.value = 'ALL';
@@ -677,6 +876,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filterBilliard) filterBilliard.checked = false;
     if (filterKaraoke) filterKaraoke.checked = false;
     if (filterMountainView) filterMountainView.checked = false;
+    if (filterBookmarks) filterBookmarks.checked = false;
 
     if (categoryTabsContainer) {
       const tabBtns = categoryTabsContainer.querySelectorAll('.tab-btn');

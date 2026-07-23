@@ -383,7 +383,67 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${formatIDR(min)} - ${formatIDR(max)}`;
   }
 
+  // Hitung secara dinamis ringkasan statistik villa & kamar untuk admin
+  function renderAdminStats() {
+    const statsContainer = document.getElementById('adminStatsContainer');
+    if (!statsContainer) return;
+
+    const totalVillas = villas.length;
+    let totalRoomTypes = 0;
+    let totalPriceSum = 0;
+    let priceCount = 0;
+    let totalReviews = 0;
+    let ratingSum = 0;
+
+    villas.forEach(v => {
+      totalReviews += (v.reviewsCount || 0);
+      ratingSum += (v.rating || 0);
+      if (v.roomTypes && v.roomTypes.length > 0) {
+        totalRoomTypes += v.roomTypes.length;
+        v.roomTypes.forEach(r => {
+          totalPriceSum += r.priceWeekday;
+          priceCount++;
+        });
+      }
+    });
+
+    const avgRating = totalVillas > 0 ? (ratingSum / totalVillas).toFixed(2) : '0.0';
+    const avgPrice = priceCount > 0 ? Math.round(totalPriceSum / priceCount) : 0;
+
+    statsContainer.innerHTML = `
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon"><i class="ri-building-2-fill"></i></div>
+        <div class="admin-stat-info">
+          <span class="admin-stat-label">Total Penginapan</span>
+          <span class="admin-stat-value">${totalVillas} Unit</span>
+        </div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon" style="background: rgba(14, 165, 233, 0.12); color: var(--accent-cyan);"><i class="ri-hotel-bed-fill"></i></div>
+        <div class="admin-stat-info">
+          <span class="admin-stat-label">Total Tipe Kamar</span>
+          <span class="admin-stat-value">${totalRoomTypes} Kamar</span>
+        </div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon" style="background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald);"><i class="ri-price-tag-3-fill"></i></div>
+        <div class="admin-stat-info">
+          <span class="admin-stat-label">Rata-rata Harga</span>
+          <span class="admin-stat-value">${formatIDR(avgPrice)}</span>
+        </div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon" style="background: rgba(239, 68, 68, 0.12); color: #EF4444;"><i class="ri-star-fill"></i></div>
+        <div class="admin-stat-info">
+          <span class="admin-stat-label">Rating Rata-rata</span>
+          <span class="admin-stat-value">⭐ ${avgRating}</span>
+        </div>
+      </div>
+    `;
+  }
+
   function renderTable(dataset) {
+    renderAdminStats();
     if (!adminVillaTableBody) return;
 
     if (dataset.length === 0) {
